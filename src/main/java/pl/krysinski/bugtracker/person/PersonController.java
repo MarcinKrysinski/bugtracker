@@ -2,6 +2,8 @@ package pl.krysinski.bugtracker.person;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.krysinski.bugtracker.authority.Authority;
+import pl.krysinski.bugtracker.authority.AuthorityRepository;
 
 import java.security.InvalidParameterException;
 import java.text.ParseException;
@@ -29,11 +31,11 @@ public class PersonController {
         return personRepository.findAll();
     }
 
-    @PostMapping("/save")
-    public Person save(@RequestParam String username, @RequestParam String password) {
-        Person person = new Person(username, password, true);
-        return personRepository.save(person);
-    }
+//    @PostMapping("/save")
+//    public Person save(@RequestParam String username, @RequestParam String password) {
+//        Person person = new Person(username, password, true);
+//        return personRepository.save(person);
+//    }
 
 
     @GetMapping("/get")

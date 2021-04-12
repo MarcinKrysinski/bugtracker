@@ -1,7 +1,8 @@
-package pl.krysinski.bugtracker.person;
+package pl.krysinski.bugtracker.authority;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import pl.krysinski.bugtracker.enums.AuthorityName;
 
 import java.util.Optional;
 
@@ -11,4 +12,6 @@ public interface AuthorityRepository extends CrudRepository<Authority, Long> {
     Iterable<Authority> findAllByPersonUsername(String username);
 
     Optional<Authority> findByAuthority(String authority);
+
+    Authority findByAuthority(AuthorityName name);
 }

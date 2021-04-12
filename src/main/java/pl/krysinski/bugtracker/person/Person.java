@@ -2,6 +2,8 @@ package pl.krysinski.bugtracker.person;
 
 
 import org.hibernate.annotations.ColumnDefault;
+import pl.krysinski.bugtracker.authority.Authority;
+import pl.krysinski.bugtracker.enums.Role;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,35 +20,38 @@ public class Person {
     @Column(nullable = false, unique = true, length = 100)
     private String username;
 
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private String firstName;
 
     @Column(nullable = false)
     private String lastName;
 
     @Column(nullable = false)
-    @ColumnDefault("false")
-    private Boolean passwordExpired;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
+    @ColumnDefault("true")
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private Boolean enabled;
+    private Boolean enabled= true;
 
     private Date dateCreated;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "person_authorities",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     Set<Authority> authorities;
 
-    public Person(String username, String password, Boolean enabled) {
+    public Person(String username, String password, String firstName, String lastName, Role role) {
         this.username = username;
         this.password = password;
-        this.enabled = enabled;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
         this.dateCreated = new Date();
-        this.passwordExpired = false;
     }
 
     protected Person() {
@@ -76,12 +81,32 @@ public class Person {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Boolean getEnabled() {
         return enabled;
     }
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     public Date getDateCreated() {

@@ -1,4 +1,5 @@
 package pl.krysinski.bugtracker.enums;
 
-public enum Status {
+public enum Role {
+    USER, ADMIN
 }

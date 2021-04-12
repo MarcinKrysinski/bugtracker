@@ -1,4 +1,4 @@
 package pl.krysinski.bugtracker.enums;
 
-public class Type {
+public enum Type {
 }
