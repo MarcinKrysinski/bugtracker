@@ -16,6 +16,6 @@ public class IndexController {
     @GetMapping("/contact")
     public String contact(Model model){
         model.addAttribute("isAdmin", true);
-        return "contact";
+        return "layout";
     }
 }

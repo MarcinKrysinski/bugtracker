@@ -1,11 +1,17 @@
 
 package pl.krysinski.bugtracker.authority;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import pl.krysinski.bugtracker.enums.AuthorityName;
 
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
+@Getter
+@Setter
 public class Authority {
 
     public static final String ROLE_PREFIX = "ROLE_";
@@ -18,18 +24,7 @@ public class Authority {
     @Column(nullable = false, unique = true)
     AuthorityName authority;
 
-    protected Authority() {
-    }
-
     public Authority(AuthorityName authority) {
-        this.authority = authority;
-    }
-
-    public AuthorityName getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(AuthorityName authority) {
         this.authority = authority;
     }
 }
