@@ -10,12 +10,12 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(){
-        return "index";
+        return "layout";
     }
 
     @GetMapping("/contact")
     public String contact(Model model){
         model.addAttribute("isAdmin", true);
-        return "layout";
+        return "contact";
     }
 }
