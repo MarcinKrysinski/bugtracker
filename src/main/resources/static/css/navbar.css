@@ -1,7 +1,9 @@
 #navbar{
     background-color: royalblue;
 }
-
+#logout{
+    margin-right: 2rem;
+}
 /*.navbar-brand{*/
 /*    margin-left: 1rem;*/
 /*}*/
