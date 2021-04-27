@@ -4,6 +4,7 @@ package pl.krysinski.bugtracker.authority;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import pl.krysinski.bugtracker.enums.AuthorityName;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Authority {
 
     public static final String ROLE_PREFIX = "ROLE_";
@@ -27,4 +29,5 @@ public class Authority {
     public Authority(AuthorityName authority) {
         this.authority = authority;
     }
+
 }

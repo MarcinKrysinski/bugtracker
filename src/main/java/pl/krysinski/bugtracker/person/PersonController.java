@@ -1,101 +1,95 @@
 package pl.krysinski.bugtracker.person;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import pl.krysinski.bugtracker.authority.Authority;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
 
-import java.security.InvalidParameterException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Optional;
 
-@RestController
-@RequestMapping("/people")
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping("/users")
 public class PersonController {
-
-    private final PersonService personService;
 
     private final PersonRepository personRepository;
     private final AuthorityRepository authorityRepository;
 
     @Autowired
-    public PersonController(PersonService personService, PersonRepository personRepository, AuthorityRepository authorityRepository) {
-        this.personService = personService;
+    public PersonController(PersonRepository personRepository, AuthorityRepository authorityRepository) {
         this.personRepository = personRepository;
         this.authorityRepository = authorityRepository;
     }
 
-    @GetMapping("/list")
-    public Iterable<Person> list() {
-        return personRepository.findAll();
+    @GetMapping("showForm")
+    public String showUserForm(Person person){
+        return "add-user";
     }
 
-//    @PostMapping("/save")
-//    public Person save(@RequestParam String username, @RequestParam String password) {
-//        Person person = new Person(username, password, true);
-//        return personRepository.save(person);
+    @GetMapping("/list")
+    public String users(Model model){
+        model.addAttribute("users", this.personRepository.findAll());
+        return "users";
+    }
+
+    @RequestMapping("/addUser")
+    public String addUser(@Valid Person person, BindingResult result, Model model){
+
+        if (result.hasErrors()){
+            return "add-user";
+        }
+        model.addAttribute("authoritiesList", this.authorityRepository.findAll());
+        System.out.println(person);
+        personRepository.save(person);
+        return "redirect:list";
+    }
+
+//    @GetMapping("/addUser")
+//    public String addUser(Model model) {
+//        model.addAttribute("person", new Person());
+//        return "adduser";
 //    }
 
-
-    @GetMapping("/get")
-    public Optional<Person> get(@RequestParam Long id) {
-        return personRepository.findById(id);
+    @GetMapping("/index")
+    public String showUserList(Model model) {
+//        model.addAttribute("users", personRepository.findAll());
+        return "layout";
     }
 
-    @GetMapping("/show")
-    public Optional<Person> get(@RequestParam String username) {
-        return personRepository.findByUsernameAndEnabled(username, true);
+    @GetMapping("delete/{id}")
+    public String deleteUser(@PathVariable("id") long id, Model model) {
+
+        Person user = this.personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + id));
+
+        this.personRepository.delete(user);
+        model.addAttribute("users", this.personRepository.findAll());
+        return "redirect:/users/list";
+
     }
 
-    /**
-     * GET http://localhost:8080/people/list-sorted?dateString=2021-02-13T10:30-0000
-     *
-     * @param dateString data ze strefą czasową, np. 2021-02-13T10:30-0000
-     * @return lista rekordów `person`
-     * @throws ParseException w przypadku błędnego formatu daty
-     */
-    @GetMapping("/list-created-after")
-    public Iterable<Person> listCreatedAfter(@RequestParam String dateString)
-            throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+    @GetMapping("edit/{id}")
+    public String showUpdateForm(@PathVariable ("id") long id, Model model) {
+        Person person = this.personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));
 
-        return personRepository.findEnabledUsersCreatedAfter(sdf.parse(dateString));
+        model.addAttribute("user", person);
+        return "update-user";
     }
 
-    @PostMapping("/disable")
-    public Optional<Person> disable(@RequestParam String username) {
-        Optional<Person> person = personRepository.findByUsernameAndEnabled(username, true);
-        person.ifPresent((value) -> {
-            value.setEnabled(false);
-            personRepository.save(value);
-        });
-        return person;
-    }
-
-    @GetMapping("{username}/authorities")
-    public Iterable<Authority> getAuthorities(@PathVariable String username) {
-        return authorityRepository.findAllByPersonUsername(username);
-    }
-
-    @PostMapping("{username}/authorities")
-    public Person addAuthority(@PathVariable String username, @RequestParam String authority) {
-        Optional<Person> optPerson = personRepository.findByUsernameAndEnabled(username, true);
-
-        if (optPerson.isEmpty()) {
-            throw new InvalidParameterException("No user found");
+    @PostMapping("update/{id}")
+    public String updateStudent(@PathVariable("id") long id, @Valid Person user, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            user.setId(id);
+            return "update-user";
         }
-
-        Optional<Authority> optAuthority = authorityRepository.findByAuthority(Authority.ROLE_PREFIX + authority);
-
-        if (optAuthority.isEmpty()) {
-            throw new InvalidParameterException("No authority found");
-        }
-
-        Person person = optPerson.get();
-
-        personService.addAuthority(person, optAuthority.get());
-
-        return person;
+        personRepository.save(user);
+        model.addAttribute("users", this.personRepository.findAll());
+        return "redirect:/users/list";
     }
 }

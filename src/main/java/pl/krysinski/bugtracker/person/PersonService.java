@@ -24,6 +24,8 @@ public class PersonService {
     private String lastName;
     @Value("${my.admin.role}")
     private Role role;
+    @Value("${my.admin.email}")
+    private String email;
 
 
     private final AuthorityRepository authorityRepository;
@@ -39,7 +41,7 @@ public class PersonService {
 
     public void prepareAdminUser(){
         if(personRepository.findByUsername(username).isEmpty()) {
-            Person person = new Person(username, password, firstName, lastName, role);
+            Person person = new Person(username, password, firstName, lastName, role, email);
             List<Authority> authorities = (List<Authority>) authorityRepository.findAll();
             person.setAuthorities(new HashSet<>(authorities));
             savePerson(person);
