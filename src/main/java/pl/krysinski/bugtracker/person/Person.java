@@ -26,7 +26,7 @@ public class Person {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
-    @Column(length = 18, nullable = false)
+    @Column(nullable = false)
     @NotBlank(message = "Password is mandatory")
     private String password;
 
