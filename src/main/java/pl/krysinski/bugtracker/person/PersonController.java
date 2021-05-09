@@ -1,101 +1,116 @@
 package pl.krysinski.bugtracker.person;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.krysinski.bugtracker.authority.Authority;
+import org.springframework.web.servlet.ModelAndView;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
 
-import java.security.InvalidParameterException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Optional;
 
-@RestController
-@RequestMapping("/people")
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping("/users")
 public class PersonController {
-
-    private final PersonService personService;
 
     private final PersonRepository personRepository;
     private final AuthorityRepository authorityRepository;
+    private final PersonService personService;
 
     @Autowired
-    public PersonController(PersonService personService, PersonRepository personRepository, AuthorityRepository authorityRepository) {
-        this.personService = personService;
+    public PersonController(PersonRepository personRepository, AuthorityRepository authorityRepository, PersonService personService) {
         this.personRepository = personRepository;
         this.authorityRepository = authorityRepository;
+        this.personService = personService;
     }
+
+//    @GetMapping("/showForm")
+//    public String showUserForm(Person person){
+//        return "user/add-user";
+//    }
 
     @GetMapping("/list")
-    public Iterable<Person> list() {
-        return personRepository.findAll();
+    @Secured("ROLE_USERS_TAB")
+    public String users(Model model){
+        model.addAttribute("users", this.personRepository.findAll());
+        return "user/users";
     }
 
-//    @PostMapping("/save")
-//    public Person save(@RequestParam String username, @RequestParam String password) {
-//        Person person = new Person(username, password, true);
-//        return personRepository.save(person);
+//    @RequestMapping("/addUser") // czy tak moze byc? Czy tu lepiej post i skorzystac z osobnej metody GET 'showUserForm'?
+//    public String addUser(@Valid Person person, BindingResult result, Model model){
+//
+//        if (result.hasErrors()){
+//            return "user/add-user";
+//        }
+//        model.addAttribute("authorities",authorityRepository.findAll()); //porównac do Kondorada (service)
+//        System.out.println(person);
+//        personRepository.save(person);
+//        return "redirect:list";
+//    }
+
+    @GetMapping("/create")
+    @Secured("ROLE_MANAGE_USER")
+    ModelAndView create() {
+        ModelAndView modelAndView = new ModelAndView("user/add-user");
+        modelAndView.addObject("authorities", authorityRepository.findAll());
+        modelAndView.addObject("person", new Person());
+        return modelAndView;
+    }
+
+    @PostMapping("/save")
+    ModelAndView save(@ModelAttribute @Valid Person person, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (bindingResult.hasErrors()){
+            modelAndView.setViewName("user/add-user");
+            modelAndView.addObject("person", person);
+            return modelAndView;
+        }
+        personService.savePerson(person);
+        return new ModelAndView("redirect:/users/list");
+    }
+
+//    @GetMapping("/addUser")
+//    public String addUser(Model model) {
+//        model.addAttribute("person", new Person());
+//        return "adduser";
 //    }
 
 
-    @GetMapping("/get")
-    public Optional<Person> get(@RequestParam Long id) {
-        return personRepository.findById(id);
+    @GetMapping("delete/{id}")
+    @Secured("ROLE_MANAGE_USER")
+    public String deleteUser(@PathVariable("id") long id, Model model) {
+
+        Person user = this.personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + id));
+
+        this.personRepository.delete(user);
+        model.addAttribute("users", this.personRepository.findAll());
+        return "redirect:/users/list";
+
     }
 
-    @GetMapping("/show")
-    public Optional<Person> get(@RequestParam String username) {
-        return personRepository.findByUsernameAndEnabled(username, true);
+    @GetMapping("edit/{id}")
+    @Secured("ROLE_MANAGE_USER")
+    public String showUpdateForm(@PathVariable ("id") long id, Model model) {
+        Person person = this.personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));
+
+        model.addAttribute("user", person);
+        return "user/update-user";
     }
 
-    /**
-     * GET http://localhost:8080/people/list-sorted?dateString=2021-02-13T10:30-0000
-     *
-     * @param dateString data ze strefą czasową, np. 2021-02-13T10:30-0000
-     * @return lista rekordów `person`
-     * @throws ParseException w przypadku błędnego formatu daty
-     */
-    @GetMapping("/list-created-after")
-    public Iterable<Person> listCreatedAfter(@RequestParam String dateString)
-            throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
-
-        return personRepository.findEnabledUsersCreatedAfter(sdf.parse(dateString));
-    }
-
-    @PostMapping("/disable")
-    public Optional<Person> disable(@RequestParam String username) {
-        Optional<Person> person = personRepository.findByUsernameAndEnabled(username, true);
-        person.ifPresent((value) -> {
-            value.setEnabled(false);
-            personRepository.save(value);
-        });
-        return person;
-    }
-
-    @GetMapping("{username}/authorities")
-    public Iterable<Authority> getAuthorities(@PathVariable String username) {
-        return authorityRepository.findAllByPersonUsername(username);
-    }
-
-    @PostMapping("{username}/authorities")
-    public Person addAuthority(@PathVariable String username, @RequestParam String authority) {
-        Optional<Person> optPerson = personRepository.findByUsernameAndEnabled(username, true);
-
-        if (optPerson.isEmpty()) {
-            throw new InvalidParameterException("No user found");
+    @PostMapping("update/{id}")
+    public String updateStudent(@PathVariable("id") long id, @Valid Person user, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            user.setId(id);
+            return "user/update-user";
         }
-
-        Optional<Authority> optAuthority = authorityRepository.findByAuthority(Authority.ROLE_PREFIX + authority);
-
-        if (optAuthority.isEmpty()) {
-            throw new InvalidParameterException("No authority found");
-        }
-
-        Person person = optPerson.get();
-
-        personService.addAuthority(person, optAuthority.get());
-
-        return person;
+        personRepository.save(user);
+        model.addAttribute("users", this.personRepository.findAll());
+        return "redirect:/users/list";
     }
 }
