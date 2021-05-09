@@ -48,12 +48,12 @@ public class PersonService {
         }
     }
 
-    public void addAuthority(Person person, Authority authority) {
+    public void addAuthority(Person person, Authority authority) { //porównac do Kondorada
         person.authorities.add(authority);
         personRepository.save(person);
     }
 
-    private void savePerson(Person person){
+    void savePerson(Person person){
         String hashedPassword = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(hashedPassword);
         personRepository.save(person);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     ...
 </head>
@@ -9,6 +10,11 @@
     &copy; 2021 Marcin Krysiński
 </div>
 <div style="text-align:center" th:fragment="footer-admin">
+    <div sec:authorize="isAuthenticated()">
+        Welcome <b><span sec:authentication="name">Username</span></b>
+        &nbsp;
+        <span sec:authentication="principal.authorities">Roles</span>
+    </div>
     &copy; 2021 Marcin Krysiński (Admin user)
 </div>
 </body>
