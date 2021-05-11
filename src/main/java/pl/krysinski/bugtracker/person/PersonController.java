@@ -45,7 +45,7 @@ public class PersonController {
 //        if (result.hasErrors()){
 //            return "user/add-user";
 //        }
-//        model.addAttribute("authorities",authorityRepository.findAll()); //porównac do Kondorada (service)
+//        model.addAttribute("authorities",authorityRepository.findAll());
 //        System.out.println(person);
 //        personRepository.save(person);
 //        return "redirect:list";

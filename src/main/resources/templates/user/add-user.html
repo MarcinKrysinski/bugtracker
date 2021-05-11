@@ -62,14 +62,14 @@
                     </div>
                     <div>
                         <label for="enabled" class="col-form-label" th:text="#{addUser.enabled}">Enabled</label>
-                        <select class="form-control" id="enabled">
+                        <select class="form-control" id="enabled" name="enabled">
                             <option th:value="${true}" th:text="#{addUser.enabled.true}">Enabled</option>
                             <option th:value="${false}" th:text="#{addUser.enabled.false}">Disabled</option>
                         </select>
                     </div>
                     <div>
-                        <label for="role" class="col-form-label" th:text="#{addUser.role}">Role</label>
-                        <select class="form-control" id="role">
+<!--                        <label for="role" class="col-form-label" th:text="#{addUser.role}">Role</label>-->
+                        <select class="form-control" id="role" name="role">
                             <option th:each="roleOpt : ${T(pl.krysinski.bugtracker.enums.Role).values()}"
                                     th:value="${roleOpt}" th:text="${roleOpt.description}">Role
                             </option>
@@ -89,12 +89,6 @@
                         <label th:text="#{${'authority.' + authority.authority}}"
                                th:for="${#ids.prev('authorities')}"></label>
                     </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mt-5">
-                    <input type="submit" class="btn btn-primary">
                 </div>
             </div>
 
