@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import pl.krysinski.bugtracker.enums.Priority;
+import pl.krysinski.bugtracker.enums.Status;
+import pl.krysinski.bugtracker.enums.Type;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.project.ProjectRepository;
 
@@ -29,15 +32,24 @@ public class IssueController {
 
     @GetMapping("/list")
 //    @Secured("ROLE_USERS_TAB")
-    public String users(Model model){
-        model.addAttribute("issues",issueRepository.findAll());
+    public String users(@ModelAttribute IssueFilter issueFilter, Model model) {
+        model.addAttribute("issues", issueRepository.findAll());
+        model.addAttribute("assignedPerson", personRepository.findAll());
+//        model.addAttribute("projects", projectRepository.findAll());
+        model.addAttribute("filter", issueFilter);
+        model.addAttribute("types", Type.values());
+        model.addAttribute("statuses", Status.values());
+        model.addAttribute("priorities", Priority.values());
         return "issue/issues";
     }
 
     @GetMapping("/create")
-    public String showIssueForm(Model model){
+    public String showIssueForm(Model model) {
         model.addAttribute("persons", personRepository.findAll());
         model.addAttribute("projects", projectRepository.findAll());
+        model.addAttribute("types", Type.values());
+        model.addAttribute("statuses", Status.values());
+        model.addAttribute("priorities", Priority.values());
         model.addAttribute("issue", new Issue());
         return "issue/add-issue";
     }
