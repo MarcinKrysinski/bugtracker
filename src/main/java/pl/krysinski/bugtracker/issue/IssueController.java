@@ -30,16 +30,17 @@ public class IssueController {
         this.projectRepository = projectRepository;
     }
 
-    @GetMapping("/list")
+    @GetMapping
 //    @Secured("ROLE_USERS_TAB")
     public String users(@ModelAttribute IssueFilter issueFilter, Model model) {
-        model.addAttribute("issues", issueRepository.findAll());
+        model.addAttribute("issues", issueRepository.findAll(issueFilter.buildQuery()));
         model.addAttribute("assignedPerson", personRepository.findAll());
-//        model.addAttribute("projects", projectRepository.findAll());
+        model.addAttribute("projects", projectRepository.findAll());
         model.addAttribute("filter", issueFilter);
         model.addAttribute("types", Type.values());
         model.addAttribute("statuses", Status.values());
         model.addAttribute("priorities", Priority.values());
+
         return "issue/issues";
     }
 
@@ -59,7 +60,7 @@ public class IssueController {
         System.out.println(issue);
         issueRepository.save(issue);
 
-        return new ModelAndView("redirect:/list");
+        return new ModelAndView("redirect:/issues");
     }
 //    @GetMapping("/issue")
 //    ModelAndView create() {

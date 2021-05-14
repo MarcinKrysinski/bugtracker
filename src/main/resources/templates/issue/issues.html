@@ -4,7 +4,9 @@
       xmlns:layout="https://github.com/ultraq/thymeleaf-layout-dialect">
 <head>
     <meta charset="UTF-8">
-    <title>Users</title>
+    <title>Issues</title>
+
+
 </head>
 <body>
 <div class="container my-2">
@@ -21,21 +23,29 @@
 
                     <form th:action="@{/issues}"
                           th:object="${filter}">
+                            <div class="col-auto mb-3">
+                                <input th:field="*{name}"
+                                       class="form-control"
+                                       th:placeholder="#{name.issues.placeholder}"
+                                />
+                            </div>
                         <div class="row mb-3">
-<!--                            <div class="col-auto">-->
-<!--                                <select th:field="*{project}"-->
-<!--                                        class="form-control">-->
-<!--                                    <option th:value="${null}"-->
-<!--                                            th:text="#{project.placeholder}">-->
-<!--                                    </option>-->
-<!--                                    <option th:each="project : ${projects}"-->
-<!--                                            th:value="${project.id}"-->
-<!--                                            th:text="${project.name}"></option>-->
-<!--                                </select>-->
-<!--                            </div>-->
+                            <div class="col-auto">
+                                <select th:field="*{project}"
+                                        class="form-control"
+                                        onchange="this.form.submit()">
+                                    <option th:value="${null}"
+                                            th:text="#{project.issues.placeholder}">
+                                    </option>
+                                    <option th:each="project : ${projects}"
+                                            th:value="${project.id}"
+                                            th:text="${project.name}"></option>
+                                </select>
+                            </div>
                             <div class="col-auto">
                                 <select th:field="*{assignee}"
-                                        class="form-control">
+                                        class="form-control"
+                                        onchange="this.form.submit()">
                                     <option th:value="${null}"
                                             th:text="#{assignee.placeholder}"></option>
                                     <option th:each="person : ${assignedPerson}"
@@ -45,7 +55,8 @@
                             </div>
                             <div class="col-auto">
                                 <select th:field="*{type}"
-                                        class="form-control">
+                                        class="form-control"
+                                        onchange="this.form.submit()">
                                     <option th:value="${null}"
                                             th:text="#{type.placeholder}"></option>
                                     <option th:each="type : ${types}"
@@ -55,7 +66,8 @@
                             </div>
                             <div class="col-auto">
                                 <select th:field="*{status}"
-                                        class="form-control">
+                                        class="form-control"
+                                        onchange="this.form.submit()">
                                     <option th:value="${null}"
                                             th:text="#{status.placeholder}"></option>
                                     <option th:each="status : ${statuses}"
@@ -65,7 +77,8 @@
                             </div>
                             <div class="col-auto">
                                 <select th:field="*{priority}"
-                                        class="form-control">
+                                        class="form-control"
+                                        onchange="this.form.submit()">
                                     <option th:value="${null}"
                                             th:text="#{priority.placeholder}"></option>
                                     <option th:each="priority : ${priorities}"
@@ -77,8 +90,8 @@
                                 <button class="btn btn-primary"
                                         type="submit"
                                         th:text="#{button.search}"></button>
-                                <a th:href="@{/issues/list}"
-                                   th:text="#{button.cancel}"
+                                <a th:href="@{/issues}"
+                                   th:text="#{button.clear}"
                                    class="btn btn-secondary"></a>
                             </div>
                         </div>
