@@ -32,7 +32,7 @@ public class PersonController {
 //        return "user/add-user";
 //    }
 
-    @GetMapping("/list")
+    @GetMapping
     @Secured("ROLE_USERS_TAB")
     public String users(Model model){
         model.addAttribute("users", this.personRepository.findAll());
@@ -70,7 +70,7 @@ public class PersonController {
             return modelAndView;
         }
         personService.savePerson(person);
-        return new ModelAndView("redirect:/users/list");
+        return new ModelAndView("redirect:/users");
     }
 
 //    @GetMapping("/addUser")
@@ -89,7 +89,7 @@ public class PersonController {
 
         this.personRepository.delete(user);
         model.addAttribute("users", this.personRepository.findAll());
-        return "redirect:/users/list";
+        return "redirect:/users";
 
     }
 
@@ -111,6 +111,6 @@ public class PersonController {
         }
         personRepository.save(user);
         model.addAttribute("users", this.personRepository.findAll());
-        return "redirect:/users/list";
+        return "redirect:/users";
     }
 }
