@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pl.krysinski.bugtracker.enums.Priority;
 import pl.krysinski.bugtracker.enums.Status;
@@ -55,19 +53,55 @@ public class IssueController {
         return "issue/add-issue";
     }
 
-    @PostMapping("/save")
+    @PostMapping("/save") // Poprawić na Stringa
     ModelAndView save(@ModelAttribute Issue issue) {
         System.out.println(issue);
         issueRepository.save(issue);
 
         return new ModelAndView("redirect:/issues");
     }
-//    @GetMapping("/issue")
-//    ModelAndView create() {
-//        ModelAndView modelAndView = new ModelAndView("issue/add-issue");
-//        modelAndView.addObject("persons", personRepository.findAll());
-//        modelAndView.addObject("issue", new Issue());
-//        return modelAndView;
-//    }
+
+    @GetMapping("edit/{id}")
+    @Secured("ROLE_MANAGE_USER")
+    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
+        Issue issue = issueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid issue id: " + id));
+        model.addAttribute("issue", issue);
+        model.addAttribute("persons", personRepository.findAll());
+        model.addAttribute("projects", projectRepository.findAll());
+        model.addAttribute("types", Type.values());
+        model.addAttribute("statuses", Status.values());
+        model.addAttribute("priorities", Priority.values());
+        return "issue/update-issue";
+    }
+
+    @PostMapping("update/{id}")
+    public String updateIssue(@PathVariable("id") long id, BindingResult result, Model model) {
+        Issue issue = issueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid issue id: " + id));
+        if(result.hasErrors()) {
+            issue.setId(id);
+            return "issue/update-issue";
+        }
+        issueRepository.save(issue);
+        model.addAttribute("issues", issueRepository.findAll());
+        model.addAttribute("issue", issue);
+        return "redirect:/issues";
+    }
+
+    @GetMapping("/{id}")
+    @Secured("ROLE_USERS_TAB")
+    public String showIssueDetails(@ModelAttribute @PathVariable("id") Long id, Model model) {
+        Issue issue = issueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid issue id: " + id));
+        model.addAttribute("issues", issueRepository.findAll());
+        model.addAttribute("persons", personRepository.findAll());
+        model.addAttribute("projects", projectRepository.findAll());
+        model.addAttribute("priorities", Priority.values());
+        model.addAttribute("types", Type.values());
+        model.addAttribute("statuses", Status.values());
+        model.addAttribute("issue", issue);
+
+
+        return "issue/details-issue";
+    }
+
 }
 
