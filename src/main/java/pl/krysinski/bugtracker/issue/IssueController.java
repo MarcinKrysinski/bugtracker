@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.krysinski.bugtracker.enums.Priority;
 import pl.krysinski.bugtracker.enums.Status;
 import pl.krysinski.bugtracker.enums.Type;
+import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.project.ProjectRepository;
 
@@ -99,8 +100,19 @@ public class IssueController {
         model.addAttribute("statuses", Status.values());
         model.addAttribute("issue", issue);
 
-
         return "issue/details-issue";
+    }
+
+    @GetMapping("/delete/{id}")
+    @Secured("ROLE_MANAGE_USER")
+    public String deleteIssue(@PathVariable("id") Long id, Model model) {
+        Issue issue = issueRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid issue id : " + id));
+
+        issueRepository.delete(issue);
+        model.addAttribute("issues", issueRepository.findAll());
+        return "redirect:/issues";
+
     }
 
 }
