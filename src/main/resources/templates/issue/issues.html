@@ -23,12 +23,12 @@
 
                     <form th:action="@{/issues}"
                           th:object="${filter}">
-                            <div class="col-auto mb-3">
-                                <input th:field="*{name}"
-                                       class="form-control"
-                                       th:placeholder="#{name.issues.placeholder}"
-                                />
-                            </div>
+                        <div class="col-auto mb-3">
+                            <input th:field="*{name}"
+                                   class="form-control"
+                                   th:placeholder="#{name.issues.placeholder}"
+                            />
+                        </div>
                         <div class="row mb-3">
                             <div class="col-auto">
                                 <select th:field="*{project}"
@@ -105,7 +105,7 @@
                                 <tr>
                                     <th th:text="#{issues.id}"></th>
                                     <th th:text="#{issues.title}"></th>
-<!--                                    <th th:text="#{issues.project}"></th>-->
+                                    <!--                                    <th th:text="#{issues.project}"></th>-->
                                     <th th:text="#{issues.assignee}"></th>
                                     <th th:text="#{issues.type}"></th>
                                     <th th:text="#{issues.status}"></th>
@@ -114,9 +114,15 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="issue : ${issues}">
-                                    <td th:text="${issue.id}"></td>
-                                    <td th:text="${issue.name}"></td>
-<!--                                    <td th:text="${issue.project.name}"></td>-->
+                                    <td>
+                                        <a th:href="@{issues/{id}(id=${issue.id})}"
+                                           th:text="${issue.id}"></a>
+                                    </td>
+                                    <td>
+                                        <a th:text="${issue.name}"
+                                           th:href="@{issues/{id}(id=${issue.id})}"></a>
+                                    </td>
+                                    <!--                                    <td th:text="${issue.project.name}"></td>-->
                                     <td th:if="${issue.assignee != null}"
                                         th:text="${issue.assignee.firstName + ' ' + issue.assignee.lastName}"></td>
                                     <td th:text="#{${'type.' + issue.type}}"></td>

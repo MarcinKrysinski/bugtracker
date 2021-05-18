@@ -82,21 +82,21 @@ public class PersonController {
 
     @GetMapping("delete/{id}")
     @Secured("ROLE_MANAGE_USER")
-    public String deleteUser(@PathVariable("id") long id, Model model) {
+    public String deleteUser(@PathVariable("id") Long id, Model model) {
 
         Person user = this.personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + id));
 
         this.personRepository.delete(user);
-        model.addAttribute("users", this.personRepository.findAll());
+        model.addAttribute("users", personRepository.findAll());
         return "redirect:/users";
 
     }
 
     @GetMapping("edit/{id}")
     @Secured("ROLE_MANAGE_USER")
-    public String showUpdateForm(@PathVariable ("id") long id, Model model) {
-        Person person = this.personRepository.findById(id)
+    public String showUpdateForm(@PathVariable ("id") Long id, Model model) {
+        Person person = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));
 
         model.addAttribute("user", person);
@@ -110,7 +110,7 @@ public class PersonController {
             return "user/update-user";
         }
         personRepository.save(user);
-        model.addAttribute("users", this.personRepository.findAll());
+        model.addAttribute("users", personRepository.findAll());
         return "redirect:/users";
     }
 }
