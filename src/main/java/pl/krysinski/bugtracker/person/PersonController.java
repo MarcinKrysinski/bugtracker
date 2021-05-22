@@ -82,13 +82,12 @@ public class PersonController {
 
     @GetMapping("delete/{id}")
     @Secured("ROLE_MANAGE_USER")
-    public String deleteUser(@PathVariable("id") Long id, Model model) {
+    public String deleteUser(@PathVariable("id") Long id) {
 
         Person user = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + id));
 
         personRepository.delete(user);
-        model.addAttribute("users", personRepository.findAll());
         return "redirect:/users";
 
     }
@@ -99,18 +98,19 @@ public class PersonController {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));
 
+        model.addAttribute("authorities", authorityRepository.findAll());
         model.addAttribute("user", person);
         return "user/update-user";
     }
 
     @PostMapping("update/{id}")
-    public String updateStudent(@PathVariable("id") long id, @Valid Person user, BindingResult result, Model model) {
+    public String updateUser(@PathVariable("id") Long id, @Valid Person user, BindingResult result, Model model) {
         if(result.hasErrors()) {
+            model.addAttribute("authorities", authorityRepository.findAll());
             user.setId(id);
             return "user/update-user";
         }
         personRepository.save(user);
-        model.addAttribute("users", personRepository.findAll());
         return "redirect:/users";
     }
 }

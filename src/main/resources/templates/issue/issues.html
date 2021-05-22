@@ -13,7 +13,6 @@
     <div layout:fragment="content">
 
         <div class="card">
-            <div class="card-body">
                 <h2 class="md-6 " style="text-align:center" th:text="#{issues.listTitle}">Issues</h2>
                 <div th:switch="${issues}" class="container my-5">
                     <p class="mb-4">
@@ -105,7 +104,7 @@
                                 <tr>
                                     <th th:text="#{issues.id}"></th>
                                     <th th:text="#{issues.title}"></th>
-                                    <!--                                    <th th:text="#{issues.project}"></th>-->
+                                    <th th:text="#{issues.project}"></th>
                                     <th th:text="#{issues.assignee}"></th>
                                     <th th:text="#{issues.type}"></th>
                                     <th th:text="#{issues.status}"></th>
@@ -122,7 +121,7 @@
                                         <a th:text="${issue.name}"
                                            th:href="@{issues/{id}(id=${issue.id})}"></a>
                                     </td>
-                                    <!--                                    <td th:text="${issue.project.name}"></td>-->
+                                    <td th:text="${issue.project.name}"></td>
                                     <td th:if="${issue.assignee != null}"
                                         th:text="${issue.assignee.firstName + ' ' + issue.assignee.lastName}"></td>
                                     <td th:text="#{${'type.' + issue.type}}"></td>
@@ -136,7 +135,6 @@
                     </div>
                     <!--                </div>-->
                 </div>
-            </div>
         </div>
     </div>
 </div>
