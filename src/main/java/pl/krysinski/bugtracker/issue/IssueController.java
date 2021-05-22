@@ -72,19 +72,17 @@ public class IssueController {
         model.addAttribute("types", Type.values());
         model.addAttribute("statuses", Status.values());
         model.addAttribute("priorities", Priority.values());
-        return "issue/update-issue";
+        return "issue/add-issue";
     }
 
     @PostMapping("update/{id}")
-    public String updateIssue(@PathVariable("id") long id, BindingResult result, Model model) {
+    public String updateIssue(@PathVariable("id") Long id, BindingResult result) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid issue id: " + id));
         if(result.hasErrors()) {
             issue.setId(id);
-            return "issue/update-issue";
+            return "issue/add-issue";
         }
         issueRepository.save(issue);
-        model.addAttribute("issues", issueRepository.findAll());
-        model.addAttribute("issue", issue);
         return "redirect:/issues";
     }
 
@@ -105,12 +103,10 @@ public class IssueController {
 
     @GetMapping("/delete/{id}")
     @Secured("ROLE_MANAGE_USER")
-    public String deleteIssue(@PathVariable("id") Long id, Model model) {
+    public String deleteIssue(@PathVariable("id") Long id) {
         Issue issue = issueRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid issue id : " + id));
-
         issueRepository.delete(issue);
-        model.addAttribute("issues", issueRepository.findAll());
         return "redirect:/issues";
 
     }
