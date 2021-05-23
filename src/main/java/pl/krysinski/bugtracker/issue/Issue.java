@@ -42,9 +42,9 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-//    @ManyToOne     //trzeba wyciagnać info kto jest zalogowany
-//    @JoinColumn(name = "creator_id", nullable = false)
-//    private Person creator;
+    @ManyToOne     //trzeba wyciagnać info kto jest zalogowany
+    @JoinColumn(name = "creator_id", nullable = false)
+    private Person creator;
     @ManyToOne
     @JoinColumn(name = "assignee_id", nullable = false)
     private Person assignee;

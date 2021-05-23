@@ -29,8 +29,8 @@ public class Project {
     private final Date dateCreated = new Date();
     private String code; // short name? relacja?
     private String description;
-//    @ManyToOne
-//    @JoinColumn(name = "creator_id", nullable = false)
-//    private Person creator;
+    @ManyToOne
+    @JoinColumn(name = "creator_id", nullable = false)
+    private Person creator;
 
 }
