@@ -52,7 +52,7 @@ public class PersonController {
 //    }
 
     @GetMapping("/create")
-    @Secured("ROLE_MANAGE_USER")
+    @Secured("ROLE_MANAGE_USERS")
     ModelAndView create() {
         ModelAndView modelAndView = new ModelAndView("user/add-user");
         modelAndView.addObject("authorities", authorityRepository.findAll());
@@ -81,14 +81,14 @@ public class PersonController {
 
 
     @GetMapping("delete/{id}")
-    @Secured("ROLE_MANAGE_USER")
+    @Secured("ROLE_MANAGE_USERS")
     public String deleteUser(@PathVariable("id") Long id) {
         personService.softDeleteUser(id);
         return "redirect:/users";
     }
 
     @GetMapping("edit/{id}")
-    @Secured("ROLE_MANAGE_USER")
+    @Secured("ROLE_MANAGE_USERS")
     public String showUpdateForm(@PathVariable ("id") Long id, Model model) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));

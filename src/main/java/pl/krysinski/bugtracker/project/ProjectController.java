@@ -31,6 +31,7 @@ public class ProjectController {
     }
 
     @GetMapping("/create")
+    @Secured("ROLE_MANAGE_PROJECTS")
     public String showProjectForm(Model model) {
         model.addAttribute("project", new Project());
         return "project/add-project";
@@ -46,6 +47,7 @@ public class ProjectController {
     }
 
     @GetMapping("edit/{id}")
+    @Secured("ROLE_MANAGE_PROJECTS")
     public String showUpdateForm(@PathVariable("id") Long id, Model model){
         Project project =  projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
         model.addAttribute("project", project);
@@ -68,5 +70,13 @@ public class ProjectController {
         Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
         model.addAttribute("project", project);
         return "project/details-project";
+    }
+
+    @GetMapping("/delete/{id}")
+    @Secured("ROLE_MANAGE_PROJECTS")
+    public String deleteIssue(@PathVariable("id") Long id) {
+        Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
+        projectRepository.delete(project);
+        return "redirect:/projects";
     }
 }
