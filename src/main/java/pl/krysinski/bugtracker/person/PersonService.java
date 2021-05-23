@@ -48,7 +48,7 @@ public class PersonService {
         }
     }
 
-    public void addAuthority(Person person, Authority authority) { //porównac do Kondorada
+    public void addAuthority(Person person, Authority authority) {
         person.authorities.add(authority);
         personRepository.save(person);
     }
@@ -57,5 +57,12 @@ public class PersonService {
         String hashedPassword = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(hashedPassword);
         personRepository.save(person);
+    }
+
+    void softDeleteUser(Long id){
+        Person user = personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + id));
+        user.setEnabled(false);
+        personRepository.save(user);
     }
 }
