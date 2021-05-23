@@ -7,10 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.krysinski.bugtracker.enums.Priority;
-import pl.krysinski.bugtracker.enums.Status;
-import pl.krysinski.bugtracker.enums.Type;
-import pl.krysinski.bugtracker.issue.Issue;
+import pl.krysinski.bugtracker.person.Person;
+import pl.krysinski.bugtracker.person.PersonService;
+
+import java.security.Principal;
+import java.util.Optional;
 
 
 @Controller
@@ -18,15 +19,18 @@ import pl.krysinski.bugtracker.issue.Issue;
 public class ProjectController {
 
     private final ProjectRepository projectRepository;
+    private final PersonService personService;
 
     @Autowired
-    public ProjectController(ProjectRepository projectRepository) {
+    public ProjectController(ProjectRepository projectRepository, PersonService personService) {
         this.projectRepository = projectRepository;
+        this.personService = personService;
     }
 
     @GetMapping()
-    public String projects(Model model){
-        model.addAttribute("projects", projectRepository.findAll());
+    public String projects(@ModelAttribute ProjectFilter projectFilter, Model model){
+        model.addAttribute("projects", projectRepository.findAll(projectFilter.buildQuery()));
+        model.addAttribute("filter", projectFilter);
         return "project/projects";
     }
 
@@ -38,10 +42,12 @@ public class ProjectController {
     }
 
     @PostMapping("/save")
-    public String save(Project project, BindingResult result){
+    public String save(Project project, BindingResult result, Principal principal){
         if (result.hasErrors()){
             return "project/add-project";
         }
+        Optional<Person> loggedUser = personService.getLoggedUser(principal);
+        loggedUser.ifPresent(project::setCreator);
         projectRepository.save(project);
         return "redirect:/projects";
     }
@@ -66,8 +72,9 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public String showIssueDetails(@ModelAttribute @PathVariable("id") Long id, Model model) {
+    public String showProjectDetails(@ModelAttribute @PathVariable("id") Long id, Model model) {
         Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
+        model.addAttribute("creator", project.getCreator());
         model.addAttribute("project", project);
         return "project/details-project";
     }
