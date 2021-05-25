@@ -41,9 +41,9 @@
                                     <option th:value="${null}"
                                             th:text="#{creator.projects.placeholder}">
                                     </option>
-                                    <option th:each="project : ${projects}"
-                                            th:value="${project.id}"
-                                            th:text="${project.creator.getUsername()}"></option>
+                                    <option th:each="person : ${creator}"
+                                            th:value="${person.id}"
+                                            th:text="${person.firstName + ' ' + person.lastName}"></option>
                                 </select>
                             </div>
                             <div class="col-auto">
@@ -79,7 +79,7 @@
                                            th:href="@{projects/{id}(id=${project.id})}"></a>
                                     </td>
                                     <td th:text="${project.description}"></td>
-                                    <td th:text="${project.creator.getUsername()}"></td>
+                                    <td th:text="${project.creator.getFirstName() + ' ' + project.creator.getLastName()}"></td>
                                 </tr>
                                 </tbody>
                             </table>
