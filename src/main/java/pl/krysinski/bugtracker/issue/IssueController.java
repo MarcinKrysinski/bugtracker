@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.krysinski.bugtracker.enums.Priority;
 import pl.krysinski.bugtracker.enums.Status;
 import pl.krysinski.bugtracker.enums.Type;
+import pl.krysinski.bugtracker.mail.Mail;
+import pl.krysinski.bugtracker.mail.MailService;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.person.PersonService;
@@ -24,13 +26,17 @@ public class IssueController {
     private final PersonRepository personRepository;
     private final ProjectRepository projectRepository;
     private final PersonService personService;
+    private final MailService mailService;
+    private final IssueService issueService;
 
     @Autowired
-    public IssueController(IssueRepository issueRepository, PersonRepository personRepository, ProjectRepository projectRepository, PersonService personService) {
+    public IssueController(IssueRepository issueRepository, PersonRepository personRepository, ProjectRepository projectRepository, PersonService personService, MailService mailService, IssueService issueService) {
         this.issueRepository = issueRepository;
         this.personRepository = personRepository;
         this.projectRepository = projectRepository;
         this.personService = personService;
+        this.mailService = mailService;
+        this.issueService = issueService;
     }
 
     @GetMapping
@@ -112,6 +118,11 @@ public class IssueController {
         Issue issue = issueRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid issue id : " + id));
         issueRepository.delete(issue);
+        String email = issue.getCreator().getEmail();
+        if (!email.isEmpty()){
+            String subject = "Zamknięto Twoje zadanie";
+            mailService.send(new Mail(email, subject, issueService.initMailContent(issue)));
+        }
         return "redirect:/issues";
     }
 

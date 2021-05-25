@@ -42,7 +42,7 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-    @ManyToOne     //trzeba wyciagnać info kto jest zalogowany
+    @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private Person creator;
     @ManyToOne
@@ -50,7 +50,7 @@ public class Issue {
     private Person assignee;
     @Column(nullable = false)
     private final LocalDate dateCreated = LocalDate.now();
-    private LocalDate lastUpdate;
+    private LocalDate lastUpdate; // czy ja w końcu to wykorzytsuje? nie!!!
     @OneToMany(mappedBy = "issue")
     private List<Comment> comments;
 
