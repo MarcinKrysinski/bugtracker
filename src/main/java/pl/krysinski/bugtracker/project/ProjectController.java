@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.krysinski.bugtracker.person.Person;
+import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.person.PersonService;
 
 import java.security.Principal;
@@ -20,16 +21,19 @@ public class ProjectController {
 
     private final ProjectRepository projectRepository;
     private final PersonService personService;
+    private final PersonRepository personRepository;
 
     @Autowired
-    public ProjectController(ProjectRepository projectRepository, PersonService personService) {
+    public ProjectController(ProjectRepository projectRepository, PersonService personService, PersonRepository personRepository) {
         this.projectRepository = projectRepository;
         this.personService = personService;
+        this.personRepository = personRepository;
     }
 
     @GetMapping()
     public String projects(@ModelAttribute ProjectFilter projectFilter, Model model){
         model.addAttribute("projects", projectRepository.findAll(projectFilter.buildQuery()));
+        model.addAttribute("creator", personRepository.findAll());
         model.addAttribute("filter", projectFilter);
         return "project/projects";
     }
