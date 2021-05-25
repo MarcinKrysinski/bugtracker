@@ -7,11 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.krysinski.bugtracker.issue.Issue;
+import pl.krysinski.bugtracker.issue.IssueRepository;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.person.PersonService;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -22,12 +25,14 @@ public class ProjectController {
     private final ProjectRepository projectRepository;
     private final PersonService personService;
     private final PersonRepository personRepository;
+    private final IssueRepository issueRepository;
 
     @Autowired
-    public ProjectController(ProjectRepository projectRepository, PersonService personService, PersonRepository personRepository) {
+    public ProjectController(ProjectRepository projectRepository, PersonService personService, PersonRepository personRepository, IssueRepository issueRepository) {
         this.projectRepository = projectRepository;
         this.personService = personService;
         this.personRepository = personRepository;
+        this.issueRepository = issueRepository;
     }
 
     @GetMapping()
@@ -85,8 +90,10 @@ public class ProjectController {
 
     @GetMapping("/delete/{id}")
     @Secured("ROLE_MANAGE_PROJECTS")
-    public String deleteIssue(@PathVariable("id") Long id) {
+    public String deleteProject(@PathVariable("id") Long id) {
         Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
+        List<Issue> allIssuesByProject = issueRepository.findAllByProject(project);
+        issueRepository.deleteAll(allIssuesByProject);
         projectRepository.delete(project);
         return "redirect:/projects";
     }

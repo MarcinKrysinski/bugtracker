@@ -40,7 +40,7 @@ public class IssueController {
     }
 
     @GetMapping
-    public String users(@ModelAttribute IssueFilter issueFilter, Model model) {
+    public String issues(@ModelAttribute IssueFilter issueFilter, Model model) {
         model.addAttribute("issues", issueRepository.findAll(issueFilter.buildQuery()));
         model.addAttribute("assignedPerson", personRepository.findAll());
         model.addAttribute("projects", projectRepository.findAll());
