@@ -1,6 +1,9 @@
 package pl.krysinski.bugtracker.project;
 
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -51,12 +54,14 @@ public class ProjectController {
     }
 
     @PostMapping("/save")
-    public String save(Project project, BindingResult result, Principal principal){
+    public String save(Project project, BindingResult result, Principal principal, Model model){
         if (result.hasErrors()){
             return "project/add-project";
         }
         Optional<Person> loggedUser = personService.getLoggedUser(principal);
         loggedUser.ifPresent(project::setCreator);
+        project.setHtml(markdownToHTML(project.getDescription()));
+        model.addAttribute("project", project);
         projectRepository.save(project);
         return "redirect:/projects";
     }
@@ -96,5 +101,16 @@ public class ProjectController {
         issueRepository.deleteAll(allIssuesByProject);
         projectRepository.delete(project);
         return "redirect:/projects";
+    }
+
+    private String markdownToHTML(String markdown) {
+        Parser parser = Parser.builder()
+                .build();
+
+        Node document = parser.parse(markdown);
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                .build();
+
+        return renderer.render(document);
     }
 }
