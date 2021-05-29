@@ -53,5 +53,6 @@ public class Issue {
     private LocalDate lastUpdate; // czy ja w końcu to wykorzytsuje? nie!!!
     @OneToMany(mappedBy = "issue")
     private List<Comment> comments;
+    private String html;
 
 }

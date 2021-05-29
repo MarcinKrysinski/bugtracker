@@ -12,6 +12,7 @@ import pl.krysinski.bugtracker.issue.IssueRepository;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.person.PersonService;
+import pl.krysinski.bugtracker.utils.MarkdownUtils;
 
 import java.security.Principal;
 import java.util.List;
@@ -26,13 +27,15 @@ public class ProjectController {
     private final PersonService personService;
     private final PersonRepository personRepository;
     private final IssueRepository issueRepository;
+    private final MarkdownUtils markdownUtils;
 
     @Autowired
-    public ProjectController(ProjectRepository projectRepository, PersonService personService, PersonRepository personRepository, IssueRepository issueRepository) {
+    public ProjectController(ProjectRepository projectRepository, PersonService personService, PersonRepository personRepository, IssueRepository issueRepository, MarkdownUtils markdownUtils) {
         this.projectRepository = projectRepository;
         this.personService = personService;
         this.personRepository = personRepository;
         this.issueRepository = issueRepository;
+        this.markdownUtils = markdownUtils;
     }
 
     @GetMapping()
@@ -51,12 +54,13 @@ public class ProjectController {
     }
 
     @PostMapping("/save")
-    public String save(Project project, BindingResult result, Principal principal){
+    public String save(Project project, BindingResult result, Principal principal, Model model){
         if (result.hasErrors()){
             return "project/add-project";
         }
         Optional<Person> loggedUser = personService.getLoggedUser(principal);
         loggedUser.ifPresent(project::setCreator);
+        project.setHtml(markdownUtils.markdownToHTML(project.getDescription()));
         projectRepository.save(project);
         return "redirect:/projects";
     }
@@ -97,4 +101,5 @@ public class ProjectController {
         projectRepository.delete(project);
         return "redirect:/projects";
     }
+
 }

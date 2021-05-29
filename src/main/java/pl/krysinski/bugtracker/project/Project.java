@@ -32,5 +32,6 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private Person creator;
+    private String html;
 
 }
