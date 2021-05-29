@@ -14,6 +14,7 @@ import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.person.PersonService;
 import pl.krysinski.bugtracker.project.ProjectRepository;
+import pl.krysinski.bugtracker.utils.MarkdownUtils;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -28,15 +29,17 @@ public class IssueController {
     private final PersonService personService;
     private final MailService mailService;
     private final IssueService issueService;
+    private final MarkdownUtils markdownUtils;
 
     @Autowired
-    public IssueController(IssueRepository issueRepository, PersonRepository personRepository, ProjectRepository projectRepository, PersonService personService, MailService mailService, IssueService issueService) {
+    public IssueController(IssueRepository issueRepository, PersonRepository personRepository, ProjectRepository projectRepository, PersonService personService, MailService mailService, IssueService issueService, MarkdownUtils markdownUtils) {
         this.issueRepository = issueRepository;
         this.personRepository = personRepository;
         this.projectRepository = projectRepository;
         this.personService = personService;
         this.mailService = mailService;
         this.issueService = issueService;
+        this.markdownUtils = markdownUtils;
     }
 
     @GetMapping
@@ -64,12 +67,13 @@ public class IssueController {
     }
 
     @PostMapping("/save")
-    public String save(Issue issue, BindingResult result, Principal principal) {
+    public String save(Issue issue, BindingResult result, Principal principal, Model model) {
         if (result.hasErrors()){
             return "issue/add-issue";
         }
         Optional<Person> loggedUser = personService.getLoggedUser(principal);
         loggedUser.ifPresent(issue::setCreator);
+        issue.setHtml(markdownUtils.markdownToHTML(issue.getDescription()));
         issueRepository.save(issue);
 
         return "redirect:/issues";

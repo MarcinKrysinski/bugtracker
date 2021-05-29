@@ -1,9 +1,6 @@
 package pl.krysinski.bugtracker.project;
 
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -15,6 +12,7 @@ import pl.krysinski.bugtracker.issue.IssueRepository;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.person.PersonService;
+import pl.krysinski.bugtracker.utils.MarkdownUtils;
 
 import java.security.Principal;
 import java.util.List;
@@ -29,13 +27,15 @@ public class ProjectController {
     private final PersonService personService;
     private final PersonRepository personRepository;
     private final IssueRepository issueRepository;
+    private final MarkdownUtils markdownUtils;
 
     @Autowired
-    public ProjectController(ProjectRepository projectRepository, PersonService personService, PersonRepository personRepository, IssueRepository issueRepository) {
+    public ProjectController(ProjectRepository projectRepository, PersonService personService, PersonRepository personRepository, IssueRepository issueRepository, MarkdownUtils markdownUtils) {
         this.projectRepository = projectRepository;
         this.personService = personService;
         this.personRepository = personRepository;
         this.issueRepository = issueRepository;
+        this.markdownUtils = markdownUtils;
     }
 
     @GetMapping()
@@ -60,8 +60,7 @@ public class ProjectController {
         }
         Optional<Person> loggedUser = personService.getLoggedUser(principal);
         loggedUser.ifPresent(project::setCreator);
-        project.setHtml(markdownToHTML(project.getDescription()));
-        model.addAttribute("project", project);
+        project.setHtml(markdownUtils.markdownToHTML(project.getDescription()));
         projectRepository.save(project);
         return "redirect:/projects";
     }
@@ -103,14 +102,4 @@ public class ProjectController {
         return "redirect:/projects";
     }
 
-    private String markdownToHTML(String markdown) {
-        Parser parser = Parser.builder()
-                .build();
-
-        Node document = parser.parse(markdown);
-        HtmlRenderer renderer = HtmlRenderer.builder()
-                .build();
-
-        return renderer.render(document);
-    }
 }
