@@ -102,10 +102,31 @@ public class PersonController {
     public String updateUser(@PathVariable("id") Long id, @Valid PersonForm personForm, BindingResult result, Model model) {
         if(result.hasErrors()) {
             model.addAttribute("authorities", authorityRepository.findAll());
+//            model.addAttribute("passwordForm", new PasswordForm());
             personForm.setId(id);
             return "user/details-user";
         }
         personService.savePerson(personForm);
         return "redirect:/users";
+    }
+
+    @GetMapping("edit/password/{id}")
+    @Secured("ROLE_MANAGE_USERS")
+    public String showUpdatePasswordForm(@PathVariable ("id") Long id, Model model) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));
+
+        model.addAttribute("passwordForm", new PasswordForm(person));
+        return "user/password-user";
+    }
+
+    @PostMapping("update/password/{id}")
+    public String updateUserPassword(@PathVariable("id") Long id, @Valid PasswordForm passwordForm, BindingResult result) {
+        if(result.hasErrors()) {
+            passwordForm.setId(id);
+            return "user/password-user";
+        }
+        personService.savePassword(passwordForm);
+        return "redirect:/users/edit/{id}";
     }
 }

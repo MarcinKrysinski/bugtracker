@@ -1,15 +1,12 @@
 package pl.krysinski.bugtracker.person;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.krysinski.bugtracker.authority.Authority;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Getter
@@ -31,7 +28,6 @@ public class PersonForm {
     @NotBlank
     @Pattern(regexp="[A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}")
     String email;
-
 
     Set<Authority> authorities;
 
