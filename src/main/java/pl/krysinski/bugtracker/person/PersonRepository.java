@@ -17,4 +17,5 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
     @Query("select p from Person p where p.dateCreated >= :date order by p.dateCreated desc")
     Iterable<Person> findEnabledUsersCreatedAfter(@Param("date") Date date);
+
 }
