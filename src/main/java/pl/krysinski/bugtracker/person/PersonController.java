@@ -94,18 +94,18 @@ public class PersonController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));
 
         model.addAttribute("authorities", authorityRepository.findAll());
-        model.addAttribute("user", person);
-        return "user/update-user";
+        model.addAttribute("personForm", new PersonForm(person));
+        return "user/details-user";
     }
 
     @PostMapping("update/{id}")
-    public String updateUser(@PathVariable("id") Long id, @Valid Person user, BindingResult result, Model model) {
+    public String updateUser(@PathVariable("id") Long id, @Valid PersonForm personForm, BindingResult result, Model model) {
         if(result.hasErrors()) {
             model.addAttribute("authorities", authorityRepository.findAll());
-            user.setId(id);
-            return "user/update-user";
+            personForm.setId(id);
+            return "user/details-user";
         }
-        personRepository.save(user);
+        personService.savePerson(personForm);
         return "redirect:/users";
     }
 }

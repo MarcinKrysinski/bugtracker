@@ -32,11 +32,13 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
     @Autowired
     public PersonService(AuthorityRepository authorityRepository, PersonRepository personRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.authorityRepository = authorityRepository;
         this.personRepository = personRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+
     }
 
     public void prepareAdminUser(){
@@ -51,6 +53,19 @@ public class PersonService {
     public void addAuthority(Person person, Authority authority) {
         person.authorities.add(authority);
         personRepository.save(person);
+    }
+
+    void savePerson(PersonForm personForm) {
+        Person person = personRepository.findById(personForm.id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + personForm.id));
+
+        person.setUsername(personForm.getUsername());
+        person.setFirstName(personForm.getFirstName());
+        person.setLastName(personForm.getLastName());
+        person.setEmail(personForm.getEmail());
+
+        person.setAuthorities(new HashSet<>(personForm.getAuthorities()));
+        System.out.println(person.authorities);
     }
 
     void savePerson(Person person){
