@@ -1,20 +1,23 @@
 package pl.krysinski.bugtracker.validators;
 
-import pl.krysinski.bugtracker.person.Person;
+import pl.krysinski.bugtracker.person.PasswordForm;
+
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ValidPasswordsValidator implements ConstraintValidator<ValidPasswords, Person> {
+public class ValidPasswordFormValidator implements ConstraintValidator<ValidPasswordForm, PasswordForm> {
+
+
     @Override
-    public void initialize(ValidPasswords constraintAnnotation) {
+    public void initialize(ValidPasswordForm constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override
-    public boolean isValid(Person person, ConstraintValidatorContext ctx) {
-        if (person.getPassword() == null || person.getPassword().equals("")) {
-            if (person.getId() == null) {
+    public boolean isValid(PasswordForm passwordForm, ConstraintValidatorContext ctx) {
+        if (passwordForm.getPassword() == null || passwordForm.getPassword().equals("")) {
+            if (passwordForm.getId() == null) {
                 ctx.disableDefaultConstraintViolation();
                 ctx.buildConstraintViolationWithTemplate(ctx.getDefaultConstraintMessageTemplate())
                         .addPropertyNode("password")
@@ -26,7 +29,7 @@ public class ValidPasswordsValidator implements ConstraintValidator<ValidPasswor
             return true;
         }
 
-        boolean passwordsAreValid = person.getPassword().equals(person.getRepeatedPassword());
+        boolean passwordsAreValid = passwordForm.getPassword().equals(passwordForm.getRepeatedPassword());
 
         if (passwordsAreValid) {
             return true;
@@ -40,6 +43,4 @@ public class ValidPasswordsValidator implements ConstraintValidator<ValidPasswor
             return false;
         }
     }
-
-
 }
