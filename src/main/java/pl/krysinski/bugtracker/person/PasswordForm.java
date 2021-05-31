@@ -5,20 +5,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.krysinski.bugtracker.validators.ValidPasswordForm;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @NoArgsConstructor
-//@ValidPasswordForm
+@ValidPasswordForm
 public class PasswordForm {
 
     Long id;
 
-    @NotBlank
+    @Size(min = 8, max = 35)
     String password;
 
-    @NotBlank
+
     String repeatedPassword;
 
 
