@@ -3,6 +3,7 @@ package pl.krysinski.bugtracker.project;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import pl.krysinski.bugtracker.issue.Issue;
 import pl.krysinski.bugtracker.person.Person;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Project {
 
     @Id

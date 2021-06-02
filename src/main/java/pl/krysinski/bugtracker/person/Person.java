@@ -3,6 +3,7 @@ package pl.krysinski.bugtracker.person;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import pl.krysinski.bugtracker.authority.Authority;
 import pl.krysinski.bugtracker.comment.Comment;

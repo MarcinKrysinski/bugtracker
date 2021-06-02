@@ -6,7 +6,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MarkdownUtils {
+public class MarkdownParserUtils {
 
     public String markdownToHTML(String markdown) {
         Parser parser = Parser.builder()
