@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.krysinski.bugtracker.enums.Priority;
 import pl.krysinski.bugtracker.enums.Status;
 import pl.krysinski.bugtracker.enums.Type;
-import pl.krysinski.bugtracker.mail.Mail;
 import pl.krysinski.bugtracker.mail.MailService;
-import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.person.PersonService;
 import pl.krysinski.bugtracker.project.ProjectRepository;
@@ -19,7 +17,6 @@ import pl.krysinski.bugtracker.security.SecurityService;
 import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 
 import java.security.Principal;
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -63,7 +60,7 @@ public class IssueController {
 
     @GetMapping("/create")
     public String showIssueForm(Model model) {
-        model.addAttribute("persons", personRepository.findAll());
+        model.addAttribute("persons", personRepository.findAllByEnabled(true));
         model.addAttribute("projects", projectRepository.findAll());
         model.addAttribute("types", Type.values());
         model.addAttribute("statuses", Status.values());
@@ -75,7 +72,6 @@ public class IssueController {
     @PostMapping("/save")
     public String saveIssue(Issue issue, BindingResult result, Principal principal) {
         String usernameLoggedPerson = securityService.getLoggedUser();
-
         if (result.hasErrors()){
             log.error("There was a problem. The issue: " + issue + " was not saved.");
             log.error("Error: {}", result);
@@ -96,7 +92,7 @@ public class IssueController {
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid issue id: " + id));
         model.addAttribute("issue", issue);
-        model.addAttribute("persons", personRepository.findAll());
+        model.addAttribute("persons", personRepository.findAllByEnabled(true));
         model.addAttribute("projects", projectRepository.findAll());
         model.addAttribute("types", Type.values());
         model.addAttribute("statuses", Status.values());
@@ -127,7 +123,7 @@ public class IssueController {
     public String showIssueDetails(@ModelAttribute @PathVariable("id") Long id, Model model) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid issue id: " + id));
         model.addAttribute("issues", issueRepository.findAll());
-        model.addAttribute("persons", personRepository.findAll());
+        model.addAttribute("persons", personRepository.findAllByEnabled(true));
         model.addAttribute("projects", projectRepository.findAll());
         model.addAttribute("priorities", Priority.values());
         model.addAttribute("types", Type.values());
@@ -149,19 +145,10 @@ public class IssueController {
         log.debug("Deleted issue: {}", issue);
 
         issueRepository.delete(issue);
-
-        if (!emailAddress.isEmpty()){
-            String subject = "Usunięto Twoje zadanie";
-            mailService.send(new Mail(emailAddress, subject, issueService.initMailContent(issue)));
-            log.info("We send an email about closed issue to: " + emailAddress);
-            log.debug("Send an email about closed issue to: {}", emailAddress);
-        }else
-        {
-            log.info("We didn't send an email about closed issue. We couldn't find the email address of the user with the given login: " + issue.getCreator().getUsername());
-            log.debug("Didn't send an email about closed issue user with the given login: {}", issue.getCreator().getUsername());
-        }
+        issueService.sendEmailAboutDeleteIssue(issue, emailAddress);
         return "redirect:/issues";
     }
+
 
 }
 
