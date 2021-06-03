@@ -87,6 +87,8 @@ public class PersonService {
         Person user = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + id));
         user.setEnabled(false);
+        String dUsername = user.getUsername() + "_deleted";
+        user.setUsername(dUsername);
         personRepository.save(user);
     }
 }

@@ -73,7 +73,7 @@ public class IssueController {
     }
 
     @PostMapping("/save")
-    public String save(Issue issue, BindingResult result, Principal principal) {
+    public String saveIssue(Issue issue, BindingResult result, Principal principal) {
         String usernameLoggedPerson = securityService.getLoggedUser();
 
         if (result.hasErrors()){

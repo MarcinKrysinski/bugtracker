@@ -54,7 +54,7 @@ public class ProjectController {
     }
 
     @PostMapping("/save")
-    public String save(Project project, BindingResult result, Principal principal){
+    public String saveProject(Project project, BindingResult result, Principal principal){
         String usernameLoggedPerson = securityService.getLoggedUser();
 
         if (result.hasErrors()){

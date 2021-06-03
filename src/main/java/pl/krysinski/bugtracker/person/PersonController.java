@@ -1,36 +1,35 @@
 package pl.krysinski.bugtracker.person;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
-
-
+import pl.krysinski.bugtracker.security.SecurityService;
 import javax.validation.Valid;
 
+
 @Controller
+@Slf4j
 @RequestMapping("/users")
 public class PersonController {
 
     private final PersonRepository personRepository;
     private final AuthorityRepository authorityRepository;
     private final PersonService personService;
+    private final SecurityService securityService;
 
     @Autowired
-    public PersonController(PersonRepository personRepository, AuthorityRepository authorityRepository, PersonService personService) {
+    public PersonController(PersonRepository personRepository, AuthorityRepository authorityRepository, PersonService personService, SecurityService securityService) {
         this.personRepository = personRepository;
         this.authorityRepository = authorityRepository;
         this.personService = personService;
+        this.securityService = securityService;
     }
 
-//    @GetMapping("/showForm")
-//    public String showUserForm(Person person){
-//        return "user/add-user";
-//    }
 
     @GetMapping
     @Secured("ROLE_USERS_TAB")
@@ -39,45 +38,35 @@ public class PersonController {
         return "user/users";
     }
 
-//    @RequestMapping("/addUser") // czy tak moze byc? Czy tu lepiej post i skorzystac z osobnej metody GET 'showUserForm'?
-//    public String addUser(@Valid Person person, BindingResult result, Model model){
-//
-//        if (result.hasErrors()){
-//            return "user/add-user";
-//        }
-//        model.addAttribute("authorities",authorityRepository.findAll());
-//        System.out.println(person);
-//        personRepository.save(person);
-//        return "redirect:list";
-//    }
 
     @GetMapping("/create")
-    @Secured("ROLE_MANAGE_USERS") //przerobić na Stringa!!!!!!!!!!!!!!!!!!!!!!!!!!!! i pousuwać niepotrzebne rzeczy
-    ModelAndView create() {
-        ModelAndView modelAndView = new ModelAndView("user/add-user");
-        modelAndView.addObject("authorities", authorityRepository.findAll());
-        modelAndView.addObject("person", new Person());
-        return modelAndView;
+    @Secured("ROLE_MANAGE_USERS")
+    public String showPersonForm(Model model){
+        model.addAttribute("authorities", authorityRepository.findAll());
+        model.addAttribute("person", new Person());
+        return "user/add-user";
     }
+
 
     @PostMapping("/save")
-    ModelAndView save(@ModelAttribute @Valid Person person, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String savePerson(@ModelAttribute @Valid Person person, BindingResult result, Model model){
+        String usernameLoggedPerson = securityService.getLoggedUser();
 
-        if (bindingResult.hasErrors()){
-            modelAndView.setViewName("user/add-user");
-            modelAndView.addObject("person", person);
-            return modelAndView;
+        if(result.hasErrors()){
+            model.addAttribute("authorities", authorityRepository.findAll());
+            model.addAttribute("person", person);
+            log.error("There was a problem. The user: " + person + " was not saved.");
+            log.error("Error: {}", result);
+            log.debug("BindingResult: {}", result);
+            log.debug("Model: {}", model);
+            return "user/add-user";
         }
         personService.savePerson(person);
-        return new ModelAndView("redirect:/users");
-    }
 
-//    @GetMapping("/addUser")
-//    public String addUser(Model model) {
-//        model.addAttribute("person", new Person());
-//        return "adduser";
-//    }
+        log.info("Created new user: " + person.getUsername() + " by: " + usernameLoggedPerson);
+        log.debug("Create new user: {}", person);
+        return "redirect:/users";
+    }
 
 
     @GetMapping("delete/{id}")
@@ -100,13 +89,20 @@ public class PersonController {
 
     @PostMapping("update/{id}")
     public String updateUser(@PathVariable("id") Long id, @Valid PersonForm personForm, BindingResult result, Model model) {
+        String usernameLoggedPerson = securityService.getLoggedUser();
+
         if(result.hasErrors()) {
             model.addAttribute("authorities", authorityRepository.findAll());
-//            model.addAttribute("passwordForm", new PasswordForm());
             personForm.setId(id);
+            log.error("There was a problem. The user: " + personForm + " was not update.");
+            log.error("Error: {}", result);
+            log.debug("BindingResult: {}", result);
             return "user/details-user";
         }
         personService.savePerson(personForm);
+
+        log.info("Updated user: " + personForm.getUsername() + " by: " + usernameLoggedPerson);
+        log.debug("Updated user: {}", personForm);
         return "redirect:/users";
     }
 
@@ -122,11 +118,18 @@ public class PersonController {
 
     @PostMapping("update/password/{id}")
     public String updateUserPassword(@PathVariable("id") Long id, @Valid PasswordForm passwordForm, BindingResult result) {
+        String usernameLoggedPerson = securityService.getLoggedUser();
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid student id : " + id));
+
         if(result.hasErrors()) {
             passwordForm.setId(id);
             return "user/password-user";
         }
         personService.savePassword(passwordForm);
+
+        log.info("Updated user password: " + person.getUsername() + " by: " + usernameLoggedPerson);
+        log.debug("Updated user: {}", passwordForm);
         return "redirect:/users/edit/{id}";
     }
 }
