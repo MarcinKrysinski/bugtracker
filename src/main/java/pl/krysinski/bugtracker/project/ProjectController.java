@@ -13,6 +13,7 @@ import pl.krysinski.bugtracker.issue.IssueRepository;
 import pl.krysinski.bugtracker.person.PersonRepository;
 import pl.krysinski.bugtracker.security.SecurityService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class ProjectController {
     }
 
     @PostMapping("/save")
-    public String saveProject(Project project, BindingResult result, Principal principal){
+    public String saveProject(@Valid Project project, BindingResult result, Principal principal){
         String usernameLoggedPerson = securityService.getLoggedUser();
 
         if (result.hasErrors()){
@@ -84,8 +85,8 @@ public class ProjectController {
     }
 
     @PostMapping("update/{id}")
-    public String updateProject(@PathVariable("id") Long id, BindingResult result){
-        Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
+    public String updateProject(@PathVariable("id") Long id, BindingResult result, @Valid Project project){
+//        Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
         String usernameLoggedPerson = securityService.getLoggedUser();
         if (result.hasErrors()){
             project.setId(id);

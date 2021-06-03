@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import pl.krysinski.bugtracker.issue.Issue;
 import pl.krysinski.bugtracker.person.Person;
+import pl.krysinski.bugtracker.validators.UniqueProjectName;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@UniqueProjectName
 @ToString
 public class Project {
 
