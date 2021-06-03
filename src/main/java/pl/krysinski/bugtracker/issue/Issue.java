@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+//@ToString
 public class Issue {
 
     @Id
@@ -55,4 +55,20 @@ public class Issue {
     private List<Comment> comments;
     private String html;
 
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "id=" + id +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", type=" + type +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", project=" + project +
+                ", creator=" + creator +
+                ", assignee=" + assignee +
+                ", dateCreated=" + dateCreated +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
 }

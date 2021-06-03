@@ -1,5 +1,6 @@
 package pl.krysinski.bugtracker.mail;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 
 
 @Service
+@Slf4j
 public class MailService {
 
     private final JavaMailSender javaMailSender;
@@ -18,6 +20,7 @@ public class MailService {
 
 
     public void send (Mail mail){
+        String recipent = mail.getRecipient();
         try{
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -27,9 +30,10 @@ public class MailService {
             mimeMessageHelper.setText(mail.getContent());
 
             javaMailSender.send(mimeMessage);
+            log.info("Wysłano maila na adres :" + recipent);
 
         }catch (Exception e){
-            System.out.println("Coś poszło nie tak ;(");
+            log.error("Wysłane maila na adres : " + recipent + " nie powiodło się..");
             e.printStackTrace();
         }
     }

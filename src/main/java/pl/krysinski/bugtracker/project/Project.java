@@ -3,6 +3,7 @@ package pl.krysinski.bugtracker.project;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import pl.krysinski.bugtracker.issue.Issue;
 import pl.krysinski.bugtracker.person.Person;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Project {
 
     @Id
@@ -27,7 +29,7 @@ public class Project {
     private Boolean enabled = true;
     @Column(nullable = false)
     private final Date dateCreated = new Date();
-    private String code; // short name? relacja?
+//    private String code; // short name? relacja?
     private String description;
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)

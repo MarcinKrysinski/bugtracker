@@ -1,5 +1,6 @@
 package pl.krysinski.bugtracker.person;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,8 +77,8 @@ public class PersonService {
     void savePassword(PasswordForm passwordForm){
         Person person = personRepository.findById(passwordForm.id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + passwordForm.id));
-//        String hashedPassword = bCryptPasswordEncoder.encode(passwordForm.getPassword());
-//        person.setPassword(hashedPassword);
+        String hashedPassword = bCryptPasswordEncoder.encode(passwordForm.getPassword());
+        person.setPassword(hashedPassword);
         person.setPassword(passwordForm.getPassword());
         personRepository.save(person);
     }
@@ -86,6 +87,8 @@ public class PersonService {
         Person user = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + id));
         user.setEnabled(false);
+        String dUsername = user.getUsername() + "_deleted";
+        user.setUsername(dUsername);
         personRepository.save(user);
     }
 }

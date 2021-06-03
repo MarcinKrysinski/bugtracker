@@ -78,6 +78,7 @@
                     <div th:each="authority : ${authorities}">
                         <input name="authorities"
                                type="checkbox"
+                               class="form_control"
                                th:value="${authority.id}"
                                th:field="*{authorities}"/>
                         <label th:text="#{${'authority.' + authority.authority}}"
