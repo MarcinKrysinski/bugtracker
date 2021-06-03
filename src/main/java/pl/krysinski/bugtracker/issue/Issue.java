@@ -3,13 +3,14 @@ package pl.krysinski.bugtracker.issue;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import pl.krysinski.bugtracker.comment.Comment;
 import pl.krysinski.bugtracker.enums.Priority;
 import pl.krysinski.bugtracker.enums.Status;
 import pl.krysinski.bugtracker.enums.Type;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.project.Project;
+import pl.krysinski.bugtracker.validators.IssueMandatoryAssigneeField;
+import pl.krysinski.bugtracker.validators.IssueMandatoryProjectField;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -19,6 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@IssueMandatoryProjectField
+@IssueMandatoryAssigneeField
 //@ToString
 public class Issue {
 
