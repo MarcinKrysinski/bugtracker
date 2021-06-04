@@ -3,6 +3,7 @@ package pl.krysinski.bugtracker.issue;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import pl.krysinski.bugtracker.comment.Comment;
 import pl.krysinski.bugtracker.enums.Priority;
 import pl.krysinski.bugtracker.enums.Status;
@@ -30,13 +31,13 @@ public class Issue {
     private Long id;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.TODO;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Priority priority;
+    private Priority priority = Priority.NORMAL;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private Type type= Type.BUG;
     @Column(nullable = false, length = 120)
     private String name;
     private String description;
@@ -53,25 +54,24 @@ public class Issue {
     private Person assignee;
     @Column(nullable = false)
     private final LocalDate dateCreated = LocalDate.now();
-    private LocalDate lastUpdate; // czy ja w końcu to wykorzytsuje? nie!!!
+//    private LocalDate lastUpdate; // czy ja w końcu to wykorzytsuje? nie!!!
     @OneToMany(mappedBy = "issue")
     private List<Comment> comments;
     private String html;
 
-    @Override
-    public String toString() {
-        return "Issue{" +
-                "id=" + id +
-                ", status=" + status +
-                ", priority=" + priority +
-                ", type=" + type +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", project=" + project +
-                ", creator=" + creator +
-                ", assignee=" + assignee +
-                ", dateCreated=" + dateCreated +
-                ", lastUpdate=" + lastUpdate +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Issue{" +
+//                "id=" + id +
+//                ", status=" + status +
+//                ", priority=" + priority +
+//                ", type=" + type +
+//                ", name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", project=" + project +
+//                ", creator=" + creator +
+//                ", assignee=" + assignee +
+//                ", dateCreated=" + dateCreated +
+//                '}';
+//    }
 }
