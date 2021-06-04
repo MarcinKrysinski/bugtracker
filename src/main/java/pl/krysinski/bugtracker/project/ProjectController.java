@@ -56,7 +56,7 @@ public class ProjectController {
 
     @PostMapping("/save")
     public String saveProject(@Valid Project project, BindingResult result, Principal principal){
-        String usernameLoggedPerson = securityService.getLoggedUser();
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
 
         if (result.hasErrors()){
             log.error("There was a problem. The project: " + project + " was not saved.");
@@ -87,7 +87,7 @@ public class ProjectController {
     @PostMapping("update/{id}")
     public String updateProject(@PathVariable("id") Long id, BindingResult result, @Valid Project project){
 //        Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
-        String usernameLoggedPerson = securityService.getLoggedUser();
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
         if (result.hasErrors()){
             project.setId(id);
             log.error("There was a problem. The project: " + project + " was not updated.");
@@ -117,7 +117,7 @@ public class ProjectController {
     public String deleteProject(@PathVariable("id") Long id) {
         Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
         List<Issue> allIssuesByProject = issueRepository.findAllByProject(project);
-        String usernameLoggedPerson = securityService.getLoggedUser();
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
 
         log.info("Deleted " + project + " by " + usernameLoggedPerson);
         log.debug("Deleting issues connected with project: {}", allIssuesByProject);

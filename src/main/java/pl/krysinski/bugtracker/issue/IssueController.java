@@ -72,7 +72,7 @@ public class IssueController {
 
     @PostMapping("/save")
     public String saveIssue(@Valid Issue issue, BindingResult result, Principal principal) {
-        String usernameLoggedPerson = securityService.getLoggedUser();
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
         if (result.hasErrors()){
             log.error("There was a problem. The issue: " + issue + " was not saved.");
             log.error("Error: {}", result);
@@ -104,7 +104,7 @@ public class IssueController {
     @PostMapping("update/{id}")
     public String updateIssue(@PathVariable("id") Long id, BindingResult result) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid issue id: " + id));
-        String usernameLoggedPerson = securityService.getLoggedUser();
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
 
         if(result.hasErrors()) {
             issue.setId(id);
@@ -140,7 +140,7 @@ public class IssueController {
         Issue issue = issueRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid issue id : " + id));
         String emailAddress = issue.getCreator().getEmail();
-        String usernameLoggedPerson = securityService.getLoggedUser();
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
 
         log.info("Deleted " + issue + " by " + usernameLoggedPerson);
         log.debug("Deleted issue: {}", issue);
