@@ -16,6 +16,7 @@ import pl.krysinski.bugtracker.project.ProjectRepository;
 import pl.krysinski.bugtracker.security.SecurityService;
 import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
@@ -70,7 +71,7 @@ public class IssueController {
     }
 
     @PostMapping("/save")
-    public String saveIssue(Issue issue, BindingResult result, Principal principal) {
+    public String saveIssue(@Valid Issue issue, BindingResult result, Principal principal) {
         String usernameLoggedPerson = securityService.getLoggedUser();
         if (result.hasErrors()){
             log.error("There was a problem. The issue: " + issue + " was not saved.");
