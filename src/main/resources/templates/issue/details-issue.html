@@ -11,44 +11,43 @@
 
 <div layout:fragment="content">
     <div class="container my-5">
-        <h2 class="row">
-            <div class="inner">
-                <label th:text="#{issue.details.title}"></label>
-                <a class="btn btn-success btn-sm"
-                   th:text="#{button.edit}"
-                   th:href="@{edit/{id}(id=${issue.id})}"></a>
-            </div>
-        </h2>
         <form action="#" th:object="${issue}">
             <div class="row">
                 <div class="col-md-9 col-sm-12">
                     <div class="form-group col-mb-3">
-                        <!--                        <label for="name" class="col-form-label" th:text="#{addIssue.name}">Subject</label>-->
-                        <!--                        <input type="text" th:field="*{name}" class="form-control" id="name"-->
-                        <!--                               placeholder="Subject" th:placeholder="#{addIssue.name}" disabled>-->
-                        <h2 style="font-size: xxx-large;font-family: Arial" th:text="${issue.name}" id="name"></h2>
-                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-                              class="text-danger"></span>
+                        <h1 class="row" >
+                            <div class="inner">
+                                <label style="font-size: xxx-large" th:text="${issue.name}" id="name"></label>
+                                <a class="btn btn-success btn-sm"
+                                   th:text="#{button.edit}"
+                                   th:href="@{edit/{id}(id=${issue.id})}"></a>
+                            </div>
+                        </h1>
+                        <div class="form-group col-mb-3">
+                            <label for="creator"
+                                   th:text="#{addIssue.creator}"
+                                   style="float: left"></label>
+                            <p th:text="${issue.creator.getFirstName() + ' ' + issue.creator.getLastName()}"
+                               id="creator">Creator</p>
+                        </div>
                     </div>
                     <div class="form-group col-mb-3">
-                        <div class="border" id="description" th:utext="${issue.html}">Content</div>
-                        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
-                              class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-mb-3">
-                        <label for="creator" th:text="#{addIssue.creator}" style="float: left"></label>
-                        <p th:text="${issue.creator.getFirstName() + ' ' + issue.creator.getLastName()}" id="creator">
-                            Creator</p>
+                        <div class="border"
+                             id="description"
+                             th:utext="${issue.html}">Content</div>
                     </div>
                 </div>
 
-
                 <div class="col-md-3 col-sm-12">
                     <div class="form-group col-mb-3">
-                        <label for="type" th:text="#{addIssue.type}"></label>
-                        <select class="form-control" th:field="*{type}"
-                                name="type" id="type" disabled>
-                            <option th:value="${null}" th:text="#{type.placeholder}"></option>
+                        <label for="type"
+                               th:text="#{addIssue.type}"></label>
+                        <select class="form-control"
+                                th:field="*{type}"
+                                name="type"
+                                id="type" disabled>
+                            <option th:value="${null}"
+                                    th:text="#{type.placeholder}"></option>
                             <option th:each="type : ${types}"
                                     th:value="${type}" th:text="${#messages.msg('type.' + type)}">Type
                             </option>
@@ -56,7 +55,8 @@
 
                     </div>
                     <div class="form-group col-mb-3">
-                        <label for="priority" th:text="#{addIssue.priority}"></label>
+                        <label for="priority"
+                               th:text="#{addIssue.priority}"></label>
                         <select class="form-control"
                                 th:field="*{priority}"
                                 name="priority"
@@ -70,30 +70,43 @@
                         </select>
                     </div>
                     <div class="form-group col-mb-3">
-                        <label for="status" th:text="#{addIssue.status}"></label>
-                        <select class="form-control" th:field="*{status}" name="status" id="status" disabled>
-                            <option th:value="${null}" th:text="#{status.placeholder}"></option>
+                        <label for="status"
+                               th:text="#{addIssue.status}"></label>
+                        <select class="form-control"
+                                th:field="*{status}"
+                                name="status"
+                                id="status" disabled>
+                            <option th:value="${null}"
+                                    th:text="#{status.placeholder}"></option>
                             <option th:each="status : ${statuses}"
                                     th:value="${status}" th:text="${#messages.msg('status.' + status)}">Status
                             </option>
                         </select>
                     </div>
                     <div class="form-group col-mb-3">
-                        <label for="assignee" th:text="#{addIssue.assignee}"></label>
-                        <select class="form-control" th:field="*{assignee}" name="assignee" id="assignee" disabled>
-                            <option th:value="${null}" th:text="#{person.placeholder}"></option>
-                            <option th:each="person : ${persons}"
-                                    th:value="${person.id}"
+                        <label for="assignee"
+                               th:text="#{addIssue.assignee}"></label>
+                        <select class="form-control"
+                                th:field="*{assignee}"
+                                name="assignee"
+                                id="assignee" disabled>
+                            <option th:value="${null}"
+                                    th:text="#{person.placeholder}"></option>
+                            <option th:value="${person.id}"
                                     th:text="${person.getFirstName() + ' ' + person.getLastName()}">Assignee
                             </option>
                         </select>
                     </div>
                     <div class="form-group col-mb-3">
-                        <label for="project" th:text="#{addIssue.project}"></label>
-                        <select class="form-control" th:field="*{project}" name="project" id="project" disabled>
-                            <option th:value="${null}" th:text="#{project.placeholder}"></option>
-                            <option th:each="project : ${projects}"
-                                    th:value="${project.id}"
+                        <label for="project"
+                               th:text="#{addIssue.project}"></label>
+                        <select class="form-control"
+                                th:field="*{project}"
+                                name="project"
+                                id="project" disabled>
+                            <option th:value="${null}"
+                                    th:text="#{project.placeholder}"></option>
+                            <option th:value="${project.id}"
                                     th:text="${project.getName()}">Project
                             </option>
                         </select>
