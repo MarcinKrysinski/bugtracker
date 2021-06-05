@@ -79,7 +79,6 @@ public class PersonService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user id : " + passwordForm.id));
         String hashedPassword = bCryptPasswordEncoder.encode(passwordForm.getPassword());
         person.setPassword(hashedPassword);
-        person.setPassword(passwordForm.getPassword());
         personRepository.save(person);
     }
 

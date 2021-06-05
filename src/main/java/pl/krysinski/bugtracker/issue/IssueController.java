@@ -152,6 +152,5 @@ public class IssueController {
         return "redirect:/issues";
     }
 
-
 }
 

@@ -80,10 +80,20 @@ public class Person {
 
 //    @OneToMany(mappedBy = "creator")
 //    Set<Project> createdProjects;
-    @OneToMany(mappedBy = "issue")
-    List<Comment> comments;
+//    @OneToMany(mappedBy = "issue")
+//    List<Comment> comments;
 
     public Person(String username, String password, String firstName, String lastName, Role role, String email) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.email = email;
+    }
+
+    public Person(Long id, String username, String password, String firstName, String lastName, Role role, String email) {
+        this.id=id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;

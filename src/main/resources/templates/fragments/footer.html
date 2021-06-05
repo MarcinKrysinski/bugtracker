@@ -8,6 +8,8 @@
 <!-- /*  Multiple fragments may be defined in one file */-->
 <div style="text-align:center" th:fragment="footer">
     &copy; 2021 Marcin Krysiński
+    <span><a th:text="#{contact}"
+             th:href="@{/contact}"></a></span>
 </div>
 <div style="text-align:center" th:fragment="footer-admin">
     <div sec:authorize="isAuthenticated()">
@@ -16,6 +18,8 @@
         <span sec:authentication="principal.authorities">Roles</span>
     </div>
     &copy; 2021 Marcin Krysiński (Admin user)
+    <span><a th:text="#{contact}"
+             th:href="@{/contact}"></a></span>
 </div>
 </body>
 </html>

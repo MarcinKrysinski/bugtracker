@@ -1,9 +1,6 @@
 package pl.krysinski.bugtracker.project;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import pl.krysinski.bugtracker.issue.Issue;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.validators.UniqueProjectName;
@@ -38,4 +35,12 @@ public class Project {
     private Person creator;
     private String html;
 
+    public Project(Long id, String name, Boolean enabled, String description, Person creator, String html) {
+        this.id = id;
+        this.name = name;
+        this.enabled = enabled;
+        this.description = description;
+        this.creator = creator;
+        this.html = html;
+    }
 }
