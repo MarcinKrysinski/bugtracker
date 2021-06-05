@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
+import pl.krysinski.bugtracker.project.Project;
 import pl.krysinski.bugtracker.security.SecurityService;
 import javax.validation.Valid;
 import java.security.Principal;
@@ -36,6 +37,7 @@ public class PersonController {
     @Secured("ROLE_USERS_TAB")
     public String users(Model model){
         model.addAttribute("users", personRepository.findAll());
+        log.debug("Getting users list: {}", model);
         return "user/users";
     }
 
@@ -45,6 +47,7 @@ public class PersonController {
     public String showPersonForm(Model model){
         model.addAttribute("authorities", authorityRepository.findAll());
         model.addAttribute("person", new Person());
+        log.debug("Getting person create form: {}", model);
         return "user/add-user";
     }
 
@@ -73,6 +76,12 @@ public class PersonController {
     @GetMapping("delete/{id}")
     @Secured("ROLE_MANAGE_USERS")
     public String deleteUser(@PathVariable("id") Long id) {
+        Person person = personRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid person id: " + id));
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
+
+        log.info("Deleted " + person + " by " + usernameLoggedPerson);
+        log.debug("Deleted project: {}", person);
+
         personService.softDeleteUser(id);
         return "redirect:/users";
     }
@@ -85,6 +94,8 @@ public class PersonController {
 
         model.addAttribute("authorities", authorityRepository.findAll());
         model.addAttribute("personForm", new PersonForm(person));
+
+        log.debug("Getting project update form: {}", model);
         return "user/details-user";
     }
 
@@ -112,8 +123,12 @@ public class PersonController {
     public String showUpdatePasswordForm(@PathVariable ("id") Long id, Model model) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid person id : " + id));
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
 
         model.addAttribute("passwordForm", new PasswordForm(person));
+
+        log.info("User password changed: " + person + " by " + usernameLoggedPerson);
+        log.debug("Updated password: {}", model);
         return "user/password-user";
     }
 
@@ -149,6 +164,8 @@ public class PersonController {
         }
         model.addAttribute("authorities", authorityRepository.findAll());
         model.addAttribute("personForm", new PersonForm(person));
+
+        log.debug("Show my account form: {}", model);
         return "myAccount/my-account-details";
     }
 
@@ -158,12 +175,13 @@ public class PersonController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid person id : " + id));
 
         model.addAttribute("passwordForm", new PasswordForm(person));
+
+        log.debug("Show Update my account password form: {}", model);
         return "myAccount/my-account-password";
     }
 
     @PostMapping("my_account/update/password/{id}")
     public String updateMyAccountPassword(@PathVariable("id") Long id, @Valid PasswordForm passwordForm, BindingResult result) {
-        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid person id : " + id));
 
@@ -176,7 +194,7 @@ public class PersonController {
         }
         personService.savePassword(passwordForm);
 
-        log.info("Updated user password: " + person.getUsername() + " by: " + usernameLoggedPerson);
+        log.info("Updated user password: " + person.getUsername() + " by himself.");
         log.debug("Updated user: {}", passwordForm);
         return "redirect:/my_account";
     }

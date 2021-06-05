@@ -67,6 +67,7 @@ public class IssueController {
         model.addAttribute("statuses", Status.values());
         model.addAttribute("priorities", Priority.values());
         model.addAttribute("issue", new Issue());
+        log.debug("Getting issue create form: {}", model);
         return "issue/add-issue";
     }
 
@@ -98,6 +99,8 @@ public class IssueController {
         model.addAttribute("types", Type.values());
         model.addAttribute("statuses", Status.values());
         model.addAttribute("priorities", Priority.values());
+        log.debug("Getting issue update form: {}", model);
+        log.debug("Issue to update: {}", issue);
         return "issue/add-issue";
     }
 
@@ -130,7 +133,7 @@ public class IssueController {
         model.addAttribute("statuses", Status.values());
         model.addAttribute("issue", issue);
         model.addAttribute("creator", issue.getCreator());
-
+        log.debug("Getting issue details: {}", model);
         return "issue/details-issue";
     }
 
