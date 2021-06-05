@@ -8,14 +8,14 @@ import pl.krysinski.bugtracker.person.Person;
 @Controller
 public class IndexController {
 
-    @GetMapping("/")
-    public String index(){
-        return "index";
-    }
+//    @GetMapping("/")
+//    public String index(){
+//        return "index";
+//    }
 
     @GetMapping("/contact")
     public String contact(Model model){
-//        model.addAttribute("isAdmin", true);
+        model.addAttribute("isAdmin", true);
         return "contact";
     }
 }

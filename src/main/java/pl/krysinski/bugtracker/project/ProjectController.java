@@ -48,7 +48,7 @@ public class ProjectController {
     }
 
     @GetMapping("/create")
-    @Secured("ROLE_MANAGE_PROJECTS")
+//    @Secured("ROLE_MANAGE_PROJECTS")
     public String showProjectForm(Model model) {
         model.addAttribute("project", new Project());
         log.debug("Getting project create form: {}", model);
