@@ -29,10 +29,12 @@ public class Project {
     @Column(nullable = false)
     private final Date dateCreated = new Date();
 //    private String code; // short name? relacja?
+    @Column(columnDefinition = "text")
     private String description;
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private Person creator;
+    @Column(columnDefinition = "text")
     private String html;
 
     public Project(Long id, String name, Boolean enabled, String description, Person creator, String html) {
