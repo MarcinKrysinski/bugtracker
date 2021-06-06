@@ -40,6 +40,7 @@ public class Issue {
     private Type type= Type.BUG;
     @Column(nullable = false, length = 120)
     private String name;
+    @Column(columnDefinition = "text")
     private String description;
 //    @Column(unique = true, length = 20)
 //    private String code; //issue number? short name? relacja?
@@ -57,6 +58,7 @@ public class Issue {
 //    private LocalDate lastUpdate; // czy ja w końcu to wykorzytsuje? nie!!!
     @OneToMany(mappedBy = "issue")
     private List<Comment> comments;
+    @Column(columnDefinition = "text")
     private String html;
 
 //    @Override
