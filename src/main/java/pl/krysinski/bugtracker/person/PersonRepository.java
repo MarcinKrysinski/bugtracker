@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pl.krysinski.bugtracker.enums.Role;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,5 +23,7 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
     @Query("select p from Person p where p.dateCreated >= :date order by p.dateCreated desc")
     Iterable<Person> findEnabledUsersCreatedAfter(@Param("date") Date date);
+
+    List<Person> findAllByRole(Role role);
 
 }
