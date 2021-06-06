@@ -9,8 +9,10 @@ import pl.krysinski.bugtracker.authority.Authority;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
 import pl.krysinski.bugtracker.enums.Role;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -90,4 +92,9 @@ public class PersonService {
         user.setUsername(dUsername);
         personRepository.save(user);
     }
+
+    public Optional<Person> getLoggedUser(Principal principal){
+        return personRepository.findByUsername(principal.getName());
+    }
+
 }
