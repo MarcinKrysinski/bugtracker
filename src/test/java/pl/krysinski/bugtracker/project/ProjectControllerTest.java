@@ -17,7 +17,7 @@ public class ProjectControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-    
+
     @Test
     @WithMockUser(username = "admin", password = "password123", authorities = "ROLE_MANAGE_PROJECTS")
     public void should_access_to_projects_list_test() throws Exception {
