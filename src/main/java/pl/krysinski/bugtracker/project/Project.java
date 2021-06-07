@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @UniqueProjectName
-@ToString
+//@ToString
 public class Project {
 
     @Id
