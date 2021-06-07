@@ -113,9 +113,9 @@
                                     th:text="${person.getFirstName() + ' ' + person.getLastName()}">Assignee
                             </option>
                         </select>
-                        <span th:if="${#fields.hasErrors('assignee')}"
+                        <small th:if="${#fields.hasErrors('assignee')}"
                               th:errors="*{assignee}"
-                              class="text-danger"></span>
+                              class="text-danger"></small>
                     </div>
                     <div class="form-group col-mb-3">
                         <label for="project" th:text="#{addIssue.project}"></label>
