@@ -107,18 +107,18 @@ public class Person {
     }
 
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", role=" + role +
-                ", enabled=" + enabled +
-                ", dateCreated=" + dateCreated +
-                ", authorities=" + authorities +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Person{" +
+//                "id=" + id +
+//                ", username='" + username + '\'' +
+//                ", password='" + password + '\'' +
+//                ", firstName='" + firstName + '\'' +
+//                ", lastName='" + lastName + '\'' +
+//                ", role=" + role +
+//                ", enabled=" + enabled +
+//                ", dateCreated=" + dateCreated +
+//                ", authorities=" + authorities +
+//                '}';
+//    }
 }

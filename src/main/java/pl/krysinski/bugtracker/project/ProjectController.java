@@ -16,6 +16,7 @@ import pl.krysinski.bugtracker.security.SecurityService;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Controller
@@ -39,7 +40,7 @@ public class ProjectController {
     }
 
     @GetMapping()
-    public String projects(@ModelAttribute ProjectFilter projectFilter, Model model){
+    public String projects(@ModelAttribute ProjectFilter projectFilter, Model model) throws InterruptedException {
         model.addAttribute("projects", projectRepository.findAll(projectFilter.buildQuery()));
         model.addAttribute("creator", personRepository.findAll());
         model.addAttribute("filter", projectFilter);
@@ -89,7 +90,6 @@ public class ProjectController {
 
     @PostMapping("update/{id}")
     public String updateProject(@PathVariable("id") Long id, BindingResult result, @Valid Project project){
-//        Project project = projectRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid project id: " + id));
         String usernameLoggedPerson = securityService.getUsernameLoggedUser();
         if (result.hasErrors()){
             project.setId(id);

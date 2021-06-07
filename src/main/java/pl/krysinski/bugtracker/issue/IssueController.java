@@ -2,6 +2,7 @@ package pl.krysinski.bugtracker.issue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,8 @@ import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 
 import javax.validation.Valid;
 import java.security.Principal;
+
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @Slf4j
@@ -47,7 +50,7 @@ public class IssueController {
     }
 
     @GetMapping
-    public String issues(@ModelAttribute IssueFilter issueFilter, Model model) {
+    public String issues(@ModelAttribute IssueFilter issueFilter, Model model) throws InterruptedException {
         model.addAttribute("issues", issueRepository.findAll(issueFilter.buildQuery()));
         model.addAttribute("assignedPerson", personRepository.findAll());
         model.addAttribute("projects", projectRepository.findAll());
@@ -72,12 +75,15 @@ public class IssueController {
     }
 
     @PostMapping("/save")
-    public String saveIssue(@Valid Issue issue, BindingResult result, Principal principal) {
+    public String saveIssue(@Valid Issue issue, BindingResult result, Principal principal, Model model) {
         String usernameLoggedPerson = securityService.getUsernameLoggedUser();
         if (result.hasErrors()){
+            model.addAttribute("persons", personRepository.findAllByEnabled(true));
+            model.addAttribute("projects", projectRepository.findAll());
             log.error("There was a problem. The issue: " + issue + " was not saved.");
             log.error("Error: {}", result);
             log.debug("BindingResult: {}", result);
+            log.debug("Model create new issue: {}", model);
             return "issue/add-issue";
         }
 
@@ -87,6 +93,7 @@ public class IssueController {
 
         log.info("Created new issue: " + issue.getName() + " by: " + usernameLoggedPerson);
         log.debug("Create new issue: {}", issue);
+        log.debug("Model create new issue: {}", model);
         return "redirect:/issues";
     }
 
