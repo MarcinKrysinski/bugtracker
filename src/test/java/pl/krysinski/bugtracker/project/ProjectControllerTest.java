@@ -10,10 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -22,11 +18,8 @@ public class ProjectControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Mock
-    private ProjectRepository projectRepository;
-
     @Test
-    @WithMockUser(username = "admin", password = "password123", authorities = "ROLE_MANAGE_PROJECTS")
+    @WithMockUser(username = "admin", password = "password1234", authorities = "ROLE_MANAGE_PROJECTS")
     public void should_access_to_projects_list_test() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/projects"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -34,7 +27,7 @@ public class ProjectControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "password123", authorities = "ROLE_MANAGE_PROJECTS")
+    @WithMockUser(username = "admin", password = "password1234", authorities = "ROLE_MANAGE_PROJECTS")
     public void should_return_view_with_projects_test() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/projects"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

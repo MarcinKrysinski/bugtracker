@@ -10,7 +10,7 @@
     <form th:action="@{/login}" method="post" class="login-form">
         <h1 th:text="#{login.label}"/>
 
-        <div th:if="${param.logout}" class="alert alert-danger">
+        <div th:if="${param.logout}" class="alert alert-primary">
             <span th:text="#{login.loggedOut}"></span>
         </div>
 

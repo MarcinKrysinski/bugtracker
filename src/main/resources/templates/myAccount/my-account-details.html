@@ -11,10 +11,13 @@
     <div layout:fragment="content">
         <h1 class="capitol"
             th:text="#{myAccount.title}">My account</h1>
-        <form th:action="@{/users/update/{id}(id=${personForm.id})}"
+        <form th:action="@{/users/my_account/update/{id}(id=${personForm.id})}"
               th:object="${personForm}"
               method="post">
             <input type="hidden" th:field="*{id}"/>
+            <div th:if="${success}" class="alert alert-success">
+                <span th:text="#{alert.save.success}"></span>
+            </div>
             <div class="row-cols-1">
                 <div class="mb-3">
                     <div>
@@ -127,7 +130,7 @@
                             class="btn btn-primary"
                             th:text="#{button.save}"></button>
                     <a class="btn btn-secondary"
-                       th:href="@{/users}"
+                       th:href="@{/kanban}"
                        th:text="#{button.cancel}"></a>
                 </div>
             </div>

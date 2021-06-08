@@ -12,6 +12,7 @@ import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.project.Project;
 import pl.krysinski.bugtracker.validators.IssueMandatoryAssigneeField;
 import pl.krysinski.bugtracker.validators.IssueMandatoryProjectField;
+import pl.krysinski.bugtracker.validators.IssueMandatoryTitle;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ import java.util.List;
 @Setter
 @IssueMandatoryProjectField
 @IssueMandatoryAssigneeField
-//@ToString
+@IssueMandatoryTitle
 public class Issue {
 
     @Id
@@ -61,16 +62,16 @@ public class Issue {
     @Column(columnDefinition = "text")
     private String html;
 
-//    @Override
-//    public String toString() {
-//        return "Issue{" +
-//                "id=" + id +
-//                ", status=" + status +
-//                ", priority=" + priority +
-//                ", type=" + type +
-//                ", name='" + name + '\'' +
-//                ", description='" + description + '\'' +
-//                ", dateCreated=" + dateCreated +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "id=" + id +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", type=" + type +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", dateCreated=" + dateCreated +
+                '}';
+    }
 }

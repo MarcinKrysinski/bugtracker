@@ -80,6 +80,9 @@ public class IssueController {
         if (result.hasErrors()){
             model.addAttribute("persons", personRepository.findAllByEnabled(true));
             model.addAttribute("projects", projectRepository.findAll());
+            model.addAttribute("types", Type.values());
+            model.addAttribute("statuses", Status.values());
+            model.addAttribute("priorities", Priority.values());
             log.error("There was a problem. The issue: " + issue + " was not saved.");
             log.error("Error: {}", result);
             log.debug("BindingResult: {}", result);
