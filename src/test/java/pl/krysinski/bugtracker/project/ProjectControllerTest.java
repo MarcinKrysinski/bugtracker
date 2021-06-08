@@ -19,7 +19,7 @@ public class ProjectControllerTest {
     MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "admin", password = "password123", authorities = "ROLE_MANAGE_PROJECTS")
+    @WithMockUser(username = "admin", password = "password1234", authorities = "ROLE_MANAGE_PROJECTS")
     public void should_access_to_projects_list_test() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/projects"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -27,7 +27,7 @@ public class ProjectControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "password123", authorities = "ROLE_MANAGE_PROJECTS")
+    @WithMockUser(username = "admin", password = "password1234", authorities = "ROLE_MANAGE_PROJECTS")
     public void should_return_view_with_projects_test() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/projects"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

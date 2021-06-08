@@ -27,6 +27,7 @@ import java.util.Set;
 @Setter
 @ValidPasswords
 @UniqueUsername
+@ToString
 public class Person {
 
     @Id
@@ -106,7 +107,7 @@ public class Person {
         this.authorities = authorities;
     }
 
-
+//
 //    @Override
 //    public String toString() {
 //        return "Person{" +

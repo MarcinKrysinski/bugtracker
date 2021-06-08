@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
 import pl.krysinski.bugtracker.project.Project;
 import pl.krysinski.bugtracker.security.SecurityService;
@@ -169,6 +170,27 @@ public class PersonController {
         return "myAccount/my-account-details";
     }
 
+    @PostMapping("/my_account/update/{id}")
+    public String updateMyAccount(@PathVariable("id") Long id, @Valid PersonForm personForm, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        String usernameLoggedPerson = securityService.getUsernameLoggedUser();
+
+        if(result.hasErrors()) {
+            model.addAttribute("authorities", authorityRepository.findAll());
+            personForm.setId(id);
+            log.error("There was a problem. The user: " + personForm + " was not update.");
+            log.error("Error: {}", result);
+            log.debug("BindingResult: {}", result);
+            return "myAccount/my-account-details";
+        }
+        personService.savePerson(personForm);
+
+        redirectAttributes.addFlashAttribute("success", "Success");
+
+        log.info("Updated user: " + personForm.getUsername() + " by: " + usernameLoggedPerson);
+        log.debug("Updated user: {}", personForm);
+        return "redirect:/users/my_account";
+    }
+
     @GetMapping("my_account/edit/password/{id}")
     public String showUpdateMyAccountPasswordForm(@PathVariable ("id") Long id, Model model) {
         Person person = personRepository.findById(id)
@@ -196,6 +218,6 @@ public class PersonController {
 
         log.info("Updated user password: " + person.getUsername() + " by himself.");
         log.debug("Updated user: {}", passwordForm);
-        return "redirect:/my_account";
+        return "redirect:/users/my_account";
     }
 }

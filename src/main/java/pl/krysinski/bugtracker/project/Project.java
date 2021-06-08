@@ -3,6 +3,7 @@ package pl.krysinski.bugtracker.project;
 import lombok.*;
 import pl.krysinski.bugtracker.issue.Issue;
 import pl.krysinski.bugtracker.person.Person;
+import pl.krysinski.bugtracker.validators.ProjectMandatoryTitle;
 import pl.krysinski.bugtracker.validators.UniqueProjectName;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @UniqueProjectName
-//@ToString
+@ProjectMandatoryTitle
 public class Project {
 
     @Id
@@ -44,5 +45,18 @@ public class Project {
         this.description = description;
         this.creator = creator;
         this.html = html;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", issues=" + issues +
+                ", enabled=" + enabled +
+                ", dateCreated=" + dateCreated +
+                ", description='" + description + '\'' +
+                ", html='" + html + '\'' +
+                '}';
     }
 }
