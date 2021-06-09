@@ -32,7 +32,7 @@ public class IssueService {
     public String initMailContent(Issue issue){
         String dateCreated = issue.getDateCreated().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + "r.";
         String dateDelete = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + "r.";
-        String content = "Twoje zgłoszenie, utworzone w dniu: " + dateCreated + " zostało usunięte w dniu: " + dateDelete;
+        String content = "Twoje zgłoszenie " + "'"+ issue.getName() + "'" + " (dot. projektu: " + issue.getProject().getName() + "), utworzone w dniu: " + dateCreated + " zostało usunięte w dniu: " + dateDelete;
         return content;
     }
 

@@ -30,11 +30,12 @@ public class ScheduleTask {
         this.mailService = mailService;
         this.personRepository = personRepository;
     }
-    @Scheduled(cron = "0 0 12 L * ?")
+//    @Scheduled(cron = "0 0 12 L * ?")
+    @Scheduled(cron = "0 * * ? * *")
     public void executeIssueCount(){
         LocalDate dateCreated = LocalDate.now();
         String subject = "Raport " + dateCreated;
-        String report = reportService.prepareReport();
+        String report = reportService.call();
         List<Person> admins =  personRepository.findAllByRole(Role.ADMIN);
 
         for (Person admin : admins) {
@@ -42,7 +43,6 @@ public class ScheduleTask {
             log.info("We send an email with monthly report: " + admin.getEmail());
             log.debug("Send an email monthly report to: {}", admin.getEmail());
         }
-
 
     }
 }
