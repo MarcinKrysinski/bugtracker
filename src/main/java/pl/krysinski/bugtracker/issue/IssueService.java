@@ -7,6 +7,7 @@ import pl.krysinski.bugtracker.mail.Mail;
 import pl.krysinski.bugtracker.mail.MailService;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonService;
+import pl.krysinski.bugtracker.project.Project;
 import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 
 import java.security.Principal;
@@ -57,7 +58,7 @@ public class IssueService {
             log.debug("Didn't send an email about closed issue user with the given login: {}", issue.getCreator().getUsername());
         }
     }
-
+    
 //    void sendEmailAboutMoreThenCrtiticalIssue(Issue issue, String emailAddress) {
 //        if (!emailAddress.isEmpty()){
 //            String subject = "Zostałeś przypisany do zgłoszenia";

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import pl.krysinski.bugtracker.comment.Comment;
 import pl.krysinski.bugtracker.enums.Priority;
 import pl.krysinski.bugtracker.enums.Status;
@@ -30,15 +32,19 @@ public class Issue {
     @Id
     @GeneratedValue
     private Long id;
+    @Audited
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status = Status.TODO;
+    @Audited
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Priority priority = Priority.NORMAL;
+    @Audited
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Type type= Type.BUG;
+    @Audited
     @Column(nullable = false, length = 120)
     private String name;
     @Column(columnDefinition = "text")
@@ -51,6 +57,7 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private Person creator;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne
     @JoinColumn(name = "assignee_id", nullable = false)
     private Person assignee;
