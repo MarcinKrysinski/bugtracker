@@ -6,10 +6,12 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.Specification;
 import pl.krysinski.bugtracker.person.Person;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProjectFilter {
+public class ProjectFilter implements Serializable {
 
     Person creator;
     String name;

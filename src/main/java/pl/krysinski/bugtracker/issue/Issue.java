@@ -17,6 +17,7 @@ import pl.krysinski.bugtracker.validators.IssueMandatoryProjectField;
 import pl.krysinski.bugtracker.validators.IssueMandatoryTitle;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import java.util.List;
 @IssueMandatoryProjectField
 @IssueMandatoryAssigneeField
 @IssueMandatoryTitle
-public class Issue {
+public class Issue implements Serializable {
 
     @Id
     @GeneratedValue

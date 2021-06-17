@@ -41,7 +41,7 @@ public class ProjectController {
 
     @GetMapping()
     public String projects(@ModelAttribute ProjectFilter projectFilter, Model model) throws InterruptedException {
-        model.addAttribute("projects", projectRepository.findAll(projectFilter.buildQuery()));
+        model.addAttribute("projects", projectService.findAll(projectFilter) );
         model.addAttribute("creator", personRepository.findAll());
         model.addAttribute("filter", projectFilter);
         log.debug("Getting project list: {}", model);

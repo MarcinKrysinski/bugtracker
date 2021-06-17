@@ -2,6 +2,7 @@ package pl.krysinski.bugtracker.person;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
-import pl.krysinski.bugtracker.project.Project;
 import pl.krysinski.bugtracker.security.SecurityService;
 import javax.validation.Valid;
 import java.security.Principal;
@@ -33,11 +33,11 @@ public class PersonController {
         this.securityService = securityService;
     }
 
-
+    @Cacheable("users")
     @GetMapping
     @Secured("ROLE_USERS_TAB")
-    public String users(Model model){
-        model.addAttribute("users", personRepository.findAll());
+    public String users(Model model) {
+        model.addAttribute("users", personService.findAll());
         log.debug("Getting users list: {}", model);
         return "user/users";
     }

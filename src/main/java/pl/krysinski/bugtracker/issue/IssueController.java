@@ -2,7 +2,6 @@ package pl.krysinski.bugtracker.issue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,7 +19,6 @@ import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 import javax.validation.Valid;
 import java.security.Principal;
 
-import java.util.concurrent.TimeUnit;
 
 @Controller
 @Slf4j
@@ -30,10 +28,7 @@ public class IssueController {
     private final IssueRepository issueRepository;
     private final PersonRepository personRepository;
     private final ProjectRepository projectRepository;
-    private final PersonService personService;
-    private final MailService mailService;
     private final IssueService issueService;
-    private final MarkdownParserUtils markdownParserUtils;
     private final SecurityService securityService;
 
 
@@ -42,16 +37,14 @@ public class IssueController {
         this.issueRepository = issueRepository;
         this.personRepository = personRepository;
         this.projectRepository = projectRepository;
-        this.personService = personService;
-        this.mailService = mailService;
         this.issueService = issueService;
-        this.markdownParserUtils = markdownParserUtils;
         this.securityService = securityService;
     }
 
+
     @GetMapping
-    public String issues(@ModelAttribute IssueFilter issueFilter, Model model) throws InterruptedException {
-        model.addAttribute("issues", issueRepository.findAll(issueFilter.buildQuery()));
+    public String issues(@ModelAttribute IssueFilter issueFilter, Model model){
+        model.addAttribute("issues", issueService.findAll(issueFilter));
         model.addAttribute("assignedPerson", personRepository.findAll());
         model.addAttribute("projects", projectRepository.findAll());
         model.addAttribute("filter", issueFilter);

@@ -2,17 +2,19 @@ package pl.krysinski.bugtracker.issue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import pl.krysinski.bugtracker.mail.Mail;
 import pl.krysinski.bugtracker.mail.MailService;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonService;
-import pl.krysinski.bugtracker.project.Project;
 import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,12 +24,14 @@ public class IssueService {
     private final PersonService personService;
     private final MarkdownParserUtils markdownParserUtils;
     private final MailService mailService;
+    private final IssueRepository issueRepository;
 
     @Autowired
-    public IssueService(PersonService personService, MarkdownParserUtils markdownParserUtils, MailService mailService) {
+    public IssueService(PersonService personService, MarkdownParserUtils markdownParserUtils, MailService mailService, IssueRepository issueRepository) {
         this.personService = personService;
         this.markdownParserUtils = markdownParserUtils;
         this.mailService = mailService;
+        this.issueRepository = issueRepository;
     }
 
     public String initMailContent(Issue issue){
@@ -58,7 +62,10 @@ public class IssueService {
             log.debug("Didn't send an email about closed issue user with the given login: {}", issue.getCreator().getUsername());
         }
     }
-    
+    @Cacheable("issues")
+    public List<Issue> findAll(IssueFilter issueFilter){
+        return issueRepository.findAll(issueFilter.buildQuery());
+    }
 //    void sendEmailAboutMoreThenCrtiticalIssue(Issue issue, String emailAddress) {
 //        if (!emailAddress.isEmpty()){
 //            String subject = "Zostałeś przypisany do zgłoszenia";
