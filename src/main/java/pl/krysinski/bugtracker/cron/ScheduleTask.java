@@ -30,8 +30,8 @@ public class ScheduleTask {
         this.mailService = mailService;
         this.personRepository = personRepository;
     }
-//    @Scheduled(cron = "0 0 12 L * ?")
-    @Scheduled(cron = "0 * * ? * *")
+    @Scheduled(cron = "0 0 12 L * ?")
+//    @Scheduled(cron = "0 * * ? * *")
     public void executeIssueCount(){
         LocalDate dateCreated = LocalDate.now();
         String subject = "Raport " + dateCreated;

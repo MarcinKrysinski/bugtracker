@@ -1,8 +1,8 @@
 package pl.krysinski.bugtracker.person;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.krysinski.bugtracker.authority.Authority;
@@ -95,6 +95,11 @@ public class PersonService {
 
     public Optional<Person> getLoggedUser(Principal principal){
         return personRepository.findByUsername(principal.getName());
+    }
+
+//    @Cacheable("users")
+    public Iterable<Person> findAll(){
+        return personRepository.findAll();
     }
 
 

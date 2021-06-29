@@ -10,12 +10,13 @@ import pl.krysinski.bugtracker.enums.Type;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.project.Project;
 
+import java.io.Serializable;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class IssueFilter {
+public class IssueFilter implements Serializable {
 
     Project project;
     Type type;

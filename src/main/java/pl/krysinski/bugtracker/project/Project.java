@@ -7,6 +7,7 @@ import pl.krysinski.bugtracker.validators.ProjectMandatoryTitle;
 import pl.krysinski.bugtracker.validators.UniqueProjectName;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @UniqueProjectName
 @ProjectMandatoryTitle
-public class Project {
+public class Project implements Serializable {
 
     @Id
     @GeneratedValue
