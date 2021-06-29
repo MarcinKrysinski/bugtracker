@@ -68,7 +68,7 @@ public class ProjectController {
         }
         projectService.addCreatorToProject(project, principal);
         projectService.markdownParser(project);
-        projectRepository.save(project);
+        projectService.save(project);
 
 
         log.info("Created new project: " + project.getName() + " by: " + usernameLoggedPerson);
@@ -98,7 +98,7 @@ public class ProjectController {
             log.debug("BindingResult: {}", result);
             return "project/add-project";
         }
-        projectRepository.save(project);
+        projectService.save(project);
 
         log.info("Updated project: " + project.getName() + " by: " + usernameLoggedPerson);
         log.debug("Updated project: {}", project);
@@ -129,7 +129,7 @@ public class ProjectController {
         log.debug("Deleted project: {}", project);
 
         issueRepository.deleteAll(allIssuesByProject);
-        projectRepository.delete(project);
+        projectService.delete(project);
         return "redirect:/projects";
     }
 

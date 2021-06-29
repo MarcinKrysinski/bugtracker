@@ -1,8 +1,10 @@
 package pl.krysinski.bugtracker.project;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import pl.krysinski.bugtracker.issue.Issue;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonService;
 import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
@@ -35,8 +37,23 @@ public class ProjectService {
         project.setHtml(markdownParserUtils.markdownToHTML(project.getDescription()));
     }
 
-    @Cacheable("projects")
+    @Cacheable(value = "projects")
     public List<Project> findAll(ProjectFilter projectFilter){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return projectRepository.findAll(projectFilter.buildQuery());
+    }
+
+    @CacheEvict(value = "projects", allEntries = true)
+    public void save(Project project) {
+        projectRepository.save(project);
+    }
+
+    @CacheEvict(value = "projects", allEntries = true)
+    public void delete(Project project) {
+        projectRepository.delete(project);
     }
 }

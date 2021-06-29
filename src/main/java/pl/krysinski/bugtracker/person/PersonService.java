@@ -97,13 +97,8 @@ public class PersonService {
         return personRepository.findByUsername(principal.getName());
     }
 
-    @Cacheable("users")
+//    @Cacheable("users")
     public Iterable<Person> findAll(){
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return personRepository.findAll();
     }
 

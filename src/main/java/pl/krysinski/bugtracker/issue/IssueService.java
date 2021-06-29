@@ -2,6 +2,7 @@ package pl.krysinski.bugtracker.issue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -62,10 +63,23 @@ public class IssueService {
             log.debug("Didn't send an email about closed issue user with the given login: {}", issue.getCreator().getUsername());
         }
     }
-    @Cacheable("issues")
+
+//    @CacheEvict(value = "issues", allEntries = true)
+    public void save(Issue issue) {
+        issueRepository.save(issue);
+    }
+
+//    @CacheEvict(value = "issues", allEntries = true)
+    public void delete(Issue issue) {
+        issueRepository.delete(issue);
+    }
+
+//    @Cacheable(value = "issues")
     public List<Issue> findAll(IssueFilter issueFilter){
         return issueRepository.findAll(issueFilter.buildQuery());
     }
+
+
 //    void sendEmailAboutMoreThenCrtiticalIssue(Issue issue, String emailAddress) {
 //        if (!emailAddress.isEmpty()){
 //            String subject = "Zostałeś przypisany do zgłoszenia";

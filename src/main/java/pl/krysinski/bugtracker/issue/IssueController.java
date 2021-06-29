@@ -2,6 +2,7 @@ package pl.krysinski.bugtracker.issue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -55,6 +56,7 @@ public class IssueController {
         return "issue/issues";
     }
 
+
     @GetMapping("/create")
     public String showIssueForm(Model model) {
         model.addAttribute("persons", personRepository.findAllByEnabled(true));
@@ -67,6 +69,7 @@ public class IssueController {
         return "issue/add-issue";
     }
 
+    @CacheEvict("issues")
     @PostMapping("/save")
     public String saveIssue(@Valid Issue issue, BindingResult result, Principal principal, Model model) {
         String usernameLoggedPerson = securityService.getUsernameLoggedUser();
@@ -85,7 +88,7 @@ public class IssueController {
 
         issueService.addCreatorToIssue(issue, principal);
         issueService.markdownParser(issue);
-        issueRepository.save(issue);
+        issueService.save(issue);
 
         log.info("Created new issue: " + issue.getName() + " by: " + usernameLoggedPerson);
         log.debug("Create new issue: {}", issue);
@@ -119,7 +122,7 @@ public class IssueController {
             log.debug("BindingResult: {}", result);
             return "issue/add-issue";
         }
-        issueRepository.save(issue);
+        issueService.save(issue);
 
         log.info("Updated issue: " + issue.getName() + " by: " + usernameLoggedPerson);
         log.debug("Updated issue: {}", issue);
@@ -150,7 +153,7 @@ public class IssueController {
         log.info("Deleted " + issue + " by " + usernameLoggedPerson);
         log.debug("Deleted issue: {}", issue);
 
-        issueRepository.delete(issue);
+        issueService.delete(issue);
         issueService.sendEmailAboutDeleteIssue(issue, emailAddress);
         return "redirect:/issues";
     }

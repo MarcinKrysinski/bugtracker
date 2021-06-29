@@ -16,6 +16,7 @@
 
 .capitol{
     margin-top: 0.5rem;
+    margin-bottom: 2rem;
     text-align: center;
 }
 
@@ -25,4 +26,10 @@
 
 #kanbanTitle{
     margin-bottom: 2rem;
+}
+
+#issueFilterBottoms{
+    float: right;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
