@@ -21,10 +21,10 @@ public class ReportService implements Callable<String> {
 
     public String prepareReport(){
 
-        Integer toDoIssuesAmount = issueRepository.countAllByStatusIs(Status.TODO);
-        Integer doneIssuesAmount = issueRepository.countAllByStatusIs(Status.DONE);
+        Integer toDoIssuesAmount = issueRepository.countAllByStatusIsAndCreatedEarlierThan(Status.TODO, "1 month");
+        Integer doneIssuesAmount = issueRepository.countAllByStatusIsAndCreatedEarlierThan(Status.DONE, "1 month");
 
-        List<Issue> toDoIssues = issueRepository.findAllByStatusOrderByPriority(Status.TODO);
+        Iterable<Issue> toDoIssues = issueRepository.findAllByStatus(Status.TODO);
         StringBuilder issues = new StringBuilder();
         for (Issue issue: toDoIssues) {
             issues.append(issue).append("\n\n");
