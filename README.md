@@ -4,7 +4,7 @@
 
 Bugtracker - task management web application. It allows you to create projects for which tasks are created or errors are reported. It allows you to manage users.
 
-##Examples functionality
+## Examples functionality
 
 - login
 
