@@ -74,7 +74,7 @@ Bugtracker - task management web application. It allows you to create projects f
 - i18n - the application supports English and Polish (the language of the application depends on the language settings of the browser)
 
 
-##To do
+## To do
 
 - comments
 - adding files
