@@ -2,10 +2,9 @@ package pl.krysinski.bugtracker.issue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import pl.krysinski.bugtracker.mail.Mail;
 import pl.krysinski.bugtracker.mail.MailService;
 import pl.krysinski.bugtracker.person.Person;
@@ -15,7 +14,6 @@ import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -75,8 +73,8 @@ public class IssueService {
     }
 
 //    @Cacheable(value = "issues")
-    public List<Issue> findAll(IssueFilter issueFilter){
-        return issueRepository.findAll(issueFilter.buildQuery());
+    public Page<Issue> findAll(IssueFilter issueFilter, Pageable pageable){
+        return issueRepository.findAll(issueFilter.buildQuery(), pageable);
     }
 
 

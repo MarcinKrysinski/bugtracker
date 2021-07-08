@@ -3,6 +3,7 @@ package pl.krysinski.bugtracker.project;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,8 +41,8 @@ public class ProjectController {
     }
 
     @GetMapping()
-    public String projects(@ModelAttribute ProjectFilter projectFilter, Model model) throws InterruptedException {
-        model.addAttribute("projects", projectService.findAll(projectFilter) );
+    public String projects(@ModelAttribute ProjectFilter projectFilter, Model model, Pageable pageable) throws InterruptedException {
+        model.addAttribute("projects", projectService.findAll(projectFilter, pageable));
         model.addAttribute("creator", personRepository.findAll());
         model.addAttribute("filter", projectFilter);
         log.debug("Getting project list: {}", model);

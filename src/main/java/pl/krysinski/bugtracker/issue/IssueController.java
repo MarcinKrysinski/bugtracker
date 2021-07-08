@@ -3,6 +3,7 @@ package pl.krysinski.bugtracker.issue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,8 +45,8 @@ public class IssueController {
 
 
     @GetMapping
-    public String issues(@ModelAttribute IssueFilter issueFilter, Model model){
-        model.addAttribute("issues", issueService.findAll(issueFilter));
+    public String issues(@ModelAttribute IssueFilter issueFilter, Model model, Pageable pageable){
+        model.addAttribute("issues", issueService.findAll(issueFilter, pageable));
         model.addAttribute("assignedPerson", personRepository.findAll());
         model.addAttribute("projects", projectRepository.findAll());
         model.addAttribute("filter", issueFilter);

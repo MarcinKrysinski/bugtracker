@@ -3,14 +3,14 @@ package pl.krysinski.bugtracker.project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pl.krysinski.bugtracker.issue.Issue;
 import pl.krysinski.bugtracker.person.Person;
 import pl.krysinski.bugtracker.person.PersonService;
 import pl.krysinski.bugtracker.utils.MarkdownParserUtils;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,13 +38,13 @@ public class ProjectService {
     }
 
     @Cacheable(value = "projects")
-    public List<Project> findAll(ProjectFilter projectFilter){
+    public Page<Project> findAll(ProjectFilter projectFilter, Pageable pageable){
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return projectRepository.findAll(projectFilter.buildQuery());
+        return projectRepository.findAll(projectFilter.buildQuery(), pageable);
     }
 
     @CacheEvict(value = "projects", allEntries = true)
