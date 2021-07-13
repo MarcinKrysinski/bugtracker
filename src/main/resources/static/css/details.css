@@ -23,7 +23,7 @@
 
 .pagin{
     margin: auto;
-    width: 10%;
+    width: fit-content;
     padding: 10px;
 }
 
