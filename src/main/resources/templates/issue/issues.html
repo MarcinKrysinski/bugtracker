@@ -128,7 +128,7 @@
             </table>
 
         </div>
-        <div th:if="${issues.totalPages > 0}" class="row">
+        <div th:if="${issues.totalPages > 0}" class="row pagin">
             <ul class="pagination">
                 <li th:if="${issues.number != 0}"
                     class="page-item">
@@ -138,7 +138,7 @@
                     </a>
                 </li>
 
-                <li th:each="pageNumber : ${#numbers.sequence(1, issues.totalPages)}"
+                <li th:each="pageNumber : ${#numbers.sequence(T(Math).max(1, issues.number - 2), T(Math).min(issues.number + 4, issues.totalPages))}"
                     th:class="${'page-item ' + ((pageNumber == issues.number + 1) ? 'active' : '')}">
                     <a th:href="@{'/issues?' + ${filter.toQueryString(pageNumber - 1)}}"
                        th:text="${pageNumber}"
