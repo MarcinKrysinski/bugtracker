@@ -3,6 +3,8 @@ package pl.krysinski.bugtracker.issue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,7 +36,7 @@ public class IssueController {
 
 
     @Autowired
-    public IssueController(IssueRepository issueRepository, PersonRepository personRepository, ProjectRepository projectRepository, PersonService personService, MailService mailService, IssueService issueService, MarkdownParserUtils markdownParserUtils, SecurityService securityService) {
+    public IssueController(IssueRepository issueRepository, PersonRepository personRepository, ProjectRepository projectRepository, IssueService issueService, SecurityService securityService) {
         this.issueRepository = issueRepository;
         this.personRepository = personRepository;
         this.projectRepository = projectRepository;
@@ -44,8 +46,9 @@ public class IssueController {
 
 
     @GetMapping
-    public String issues(@ModelAttribute IssueFilter issueFilter, Model model){
-        model.addAttribute("issues", issueService.findAll(issueFilter));
+    public String issues(@ModelAttribute IssueFilter issueFilter, Model model, Pageable pageable){
+        Page<Issue> issues = issueService.findAll(issueFilter, pageable);
+        model.addAttribute("issues", issues);
         model.addAttribute("assignedPerson", personRepository.findAll());
         model.addAttribute("projects", projectRepository.findAll());
         model.addAttribute("filter", issueFilter);

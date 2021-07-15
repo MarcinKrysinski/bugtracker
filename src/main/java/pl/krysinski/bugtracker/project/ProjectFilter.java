@@ -47,4 +47,11 @@ public class ProjectFilter implements Serializable {
         return specification;
     }
 
+    public String toQueryString(Integer page){
+        return "page=" + page +
+                (creator != null ? "&creator=" + creator.getId() : "") +
+                (description != null ? "&description=" + description : "") +
+                (name != null ? "&name=" + name : "");
+    }
+
 }

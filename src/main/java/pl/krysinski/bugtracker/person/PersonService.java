@@ -3,8 +3,11 @@ package pl.krysinski.bugtracker.person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import pl.krysinski.bugtracker.authority.Authority;
 import pl.krysinski.bugtracker.authority.AuthorityRepository;
 import pl.krysinski.bugtracker.enums.Role;
@@ -98,8 +101,8 @@ public class PersonService {
     }
 
 //    @Cacheable("users")
-    public Iterable<Person> findAll(){
-        return personRepository.findAll();
+    public Page<Person> findAll(PersonFilter personFilter, Pageable pageable){
+        return personRepository.findAll(personFilter.buildQuery(), pageable);
     }
 
 
