@@ -5,10 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.Specification;
 import pl.krysinski.bugtracker.enums.Role;
-import pl.krysinski.bugtracker.issue.Issue;
 
 import java.io.Serializable;
-import java.util.Locale;
+
 
 @Getter
 @Setter
@@ -66,5 +65,14 @@ public class PersonFilter implements Serializable {
         }
 
         return specification;
+    }
+
+    public String toQueryString(Integer page){
+        return "page=" + page +
+                (username != null ? "&username=" + username : "") +
+                (firstName != null ? "&firstName=" + firstName : "") +
+                (lastName != null ? "&lastName=" + lastName : "") +
+                (email != null ? "&email=" + email : "") +
+                (role != null ? "&role=" + role : "");
     }
 }

@@ -130,6 +130,14 @@
         </div>
         <div th:if="${issues.totalPages > 0}" class="row pagin">
             <ul class="pagination">
+                <li th:if="${projects.totalPages > 1}"
+                    class="page-item">
+                    <a th:href="@{'/issues?' + ${filter.toQueryString(0)}}"
+                       class="page-link">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+
                 <li th:if="${issues.number != 0}"
                     class="page-item">
                     <a th:href="@{'/issues?' + ${filter.toQueryString(issues.number - 1)}}"
@@ -137,6 +145,7 @@
                         <i class="fas fa-angle-left"></i>
                     </a>
                 </li>
+
 
                 <li th:each="pageNumber : ${#numbers.sequence(T(Math).max(1, issues.number - 2), T(Math).min(issues.number + 4, issues.totalPages))}"
                     th:class="${'page-item ' + ((pageNumber == issues.number + 1) ? 'active' : '')}">
@@ -150,6 +159,14 @@
                     <a th:href="@{'/issues?' + ${filter.toQueryString(issues.number + 1)}}"
                        class="page-link">
                         <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+
+                <li th:if="${projects.totalPages > 1}"
+                    class="page-item">
+                    <a th:href="@{'/issues?' + ${filter.toQueryString(issues.totalPages - 1)}}"
+                       class="page-link">
+                        <i class="fas fa-angle-double-right"></i>
                     </a>
                 </li>
             </ul>
