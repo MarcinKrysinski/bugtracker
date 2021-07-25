@@ -40,6 +40,10 @@ Bugtracker - task management web application. It allows you to create projects f
 
 ![image](https://user-images.githubusercontent.com/59838094/124665305-dab57b80-deac-11eb-86ed-3a92a70c0281.png)
 
+- Pagination
+
+![image](https://user-images.githubusercontent.com/59838094/126910501-6f4d34fb-3453-4bd0-9133-44240bd7d9b4.png)
+
 - My account
 
 ![image](https://user-images.githubusercontent.com/59838094/124666363-3a605680-deae-11eb-8dc6-aa5a6d75e5b0.png)
@@ -78,8 +82,6 @@ Bugtracker - task management web application. It allows you to create projects f
 
 - comments
 - adding files
-- pagination
-
 
 ## Technologies:
 
